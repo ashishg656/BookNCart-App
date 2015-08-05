@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/topratedmorebookslayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/bnc_margin_mini"
+        android:paddingTop="@dimen/bnc_margin_mini" >
+
+        <TextView
+            android:id="@+id/home_heading_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/bnc_margin_large"
+            android:layout_weight="1"
+            android:text="Top Rated Books"
+            android:textColor="@color/bnc_text_color_dark"
+            android:textSize="@dimen/bnc_font_medium"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/bnc_margin_small"
+            android:text="MORE"
+            android:textColor="@color/bnc_shop_by_category_color3"
+            android:textSize="@dimen/bnc_font_mini"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/home_recycler_view_toprated"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bnc_home_recent_viewpager_height"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/bnc_margin_supermini"
+        android:paddingRight="@dimen/bnc_margin_supermini"
+        android:scrollbars="none" />
+
+</LinearLayout>

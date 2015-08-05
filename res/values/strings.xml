@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BookNCart</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="bnc_open_drawer">Open Drawer</string>
+    <string name="bnc_close_drawer">Close Drawer</string>
+    <string name="bnc_home">Home</string>
+    <string name="bnc_top_rated_books">Top Rated Books</string>
+    <string name="bnc_featured_books">Featured Books</string>
+    <string name="bnc_best_selling_books">Best Selling Books</string>
+    <string name="bnc_new_added_books">Latest Books</string>
+    <string name="bnc_currently_active_books">Currently Active Books</string>
+    <string name="bnc_recently_viewed_books">Recently Viewed Books</string>
+
+</resources>

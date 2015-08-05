@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tag_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/bnc_margin_mini"
+        android:background="@drawable/tag_bg_blue"
+        android:paddingBottom="@dimen/bnc_margin_supermini"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="@dimen/bnc_margin_supermini"
+        android:text="vkjdk"
+        android:textColor="@color/bnc_white"
+        android:textSize="@dimen/bnc_font_mini" />
+
+</LinearLayout>

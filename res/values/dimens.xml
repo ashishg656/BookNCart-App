@@ -1,0 +1,36 @@
+<resources>
+
+    <dimen name="bnc_margin_supermini">2dp</dimen>
+    <dimen name="bnc_margin_mini">4dp</dimen>
+    <dimen name="bnc_margin_small">8dp</dimen>
+    <dimen name="bnc_margin_medium">12dp</dimen>
+    <dimen name="bnc_margin_large">16dp</dimen>
+    <dimen name="bnc_margin_xlarge">25dp</dimen>
+    <dimen name="bnc_font_supermini">12sp</dimen>
+    <dimen name="bnc_font_mini">14sp</dimen>
+    <dimen name="bnc_font_small">16sp</dimen>
+    <dimen name="bnc_font_medium">18sp</dimen>
+    <dimen name="bnc_button_height">48dp</dimen>
+    <dimen name="bnc_launch_app_icon_margin">210dp</dimen>
+    <dimen name="bnc_drawer_header_top_padding">56dp</dimen>
+    <dimen name="bnc_drawer_profile_image_height">64dp</dimen>
+    <dimen name="bnc_home_activity_header_height">200dp</dimen>
+    <dimen name="bnc_home_activity_category_images_height">150dp</dimen>
+    <dimen name="bnc_home_top_rated_book_image_width">150dp</dimen>
+    <dimen name="bnc_home_top_rated_book_image_height">150dp</dimen>
+    <dimen name="bnc_home_top_rated_viewpager_height">215dp</dimen>
+    <dimen name="bnc_home_tag_list_height">40dp</dimen>
+    <dimen name="bnc_home_recent_book_image_width">120dp</dimen>
+    <dimen name="bnc_home_recent_book_image_height">120dp</dimen>
+    <dimen name="bnc_home_recent_viewpager_height">180dp</dimen>
+    <dimen name="bnc_shop_by_categories_header_height">270dp</dimen>
+    <dimen name="bnc_radius_home_activity">95dp</dimen>
+    <dimen name="bnc_corner_allowance_due_to_padding">5dp</dimen>
+
+    <!-- Shop activity -->
+    <dimen name="bnc_shop_activity_filter_button_size">20dp</dimen>
+    <dimen name="bnc_shop_filter_layout_height">42dp</dimen>
+    <dimen name="bnc_shop_list_image_height">100dp</dimen>
+    <dimen name="bnc_shop_list_image_width">90dp</dimen>
+
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/bnc_margin_mini"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/bnc_margin_mini" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/semester1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Semester 1"
+        android:textColor="@color/bnc_text_color_dark"
+        android:textSize="@dimen/bnc_font_supermini" />
+
+</LinearLayout>
