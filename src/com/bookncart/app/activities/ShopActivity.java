@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -33,7 +34,7 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 	AppBarLayout appBarLayout;
 	TextView toolbarTitle;
 	RecyclerView recyclerView;
-	StaggeredGridLayoutManager staggeredGridLayoutManager;
+	GridLayoutManager gridLayoutManager;
 	LinearLayoutManager linearLayoutManager;
 	ShopActivityListAdapter adapter;
 	int appBarLayoutHeight, filterLayoutHeight;
@@ -87,13 +88,17 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 			public void onScrollStateChanged(RecyclerView recyclerView,
 					int newState) {
 				if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-					int pos = 0;
+					int pos = -1;
 					if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
 						int[] temp = new int[2];
 						((StaggeredGridLayoutManager) recyclerView
 								.getLayoutManager())
 								.findFirstVisibleItemPositions(temp);
 						pos = temp[0];
+					} else if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+						pos = ((LinearLayoutManager) recyclerView
+								.getLayoutManager())
+								.findFirstVisibleItemPosition();
 					}
 					if (pos == 0) {
 						setToolbarTranslation(recyclerView.getChildAt(0));
@@ -110,11 +115,10 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 		actionBarTitle = getIntent().getExtras().getString("actionbarname");
 		toolbarTitle.setText(actionBarTitle);
 
-		staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,
-				StaggeredGridLayoutManager.VERTICAL);
+		gridLayoutManager = new GridLayoutManager(this, 2);
 		linearLayoutManager = new LinearLayoutManager(this,
 				LinearLayoutManager.VERTICAL, false);
-		recyclerView.setLayoutManager(staggeredGridLayoutManager);
+		recyclerView.setLayoutManager(gridLayoutManager);
 
 		addData();
 
@@ -206,23 +210,23 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 		case R.id.changelistviewtype:
 			if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_GRID) {
 				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_LIST;
-				changeDisplayTypeButton.setImageResource(R.drawable.list_icon);
-				adapter = new ShopActivityListAdapter(mData, this);
-				recyclerView.setAdapter(adapter);
-				recyclerView.setLayoutManager(linearLayoutManager);
-			} else if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_LIST) {
-				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_LONG_LIST;
 				changeDisplayTypeButton
 						.setImageResource(R.drawable.list_long_icon);
 				adapter = new ShopActivityListAdapter(mData, this);
 				recyclerView.setAdapter(adapter);
 				recyclerView.setLayoutManager(linearLayoutManager);
-			} else if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_LONG_LIST) {
-				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_GRID;
+			} else if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_LIST) {
+				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_LONG_LIST;
 				changeDisplayTypeButton.setImageResource(R.drawable.grid_icon);
 				adapter = new ShopActivityListAdapter(mData, this);
 				recyclerView.setAdapter(adapter);
-				recyclerView.setLayoutManager(staggeredGridLayoutManager);
+				recyclerView.setLayoutManager(linearLayoutManager);
+			} else if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_LONG_LIST) {
+				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_GRID;
+				changeDisplayTypeButton.setImageResource(R.drawable.list_icon);
+				adapter = new ShopActivityListAdapter(mData, this);
+				recyclerView.setAdapter(adapter);
+				recyclerView.setLayoutManager(gridLayoutManager);
 			}
 			break;
 

@@ -6,6 +6,8 @@ import java.util.List;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -14,16 +16,22 @@ import android.support.design.widget.NavigationView.OnNavigationItemSelectedList
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnDragListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
@@ -32,12 +40,14 @@ import android.widget.Toast;
 
 import com.bookncart.app.R;
 import com.bookncart.app.adapters.HomeActivityRecyclerViewAdapter;
+import com.bookncart.app.adapters.SimilarBooksRecyclerViewAdapter;
 import com.bookncart.app.extras.MyAnimatorListener;
 import com.bookncart.app.objects.HomeActivityListObject;
 import com.bookncart.app.objects.HomeTopRatedBookObject;
 import com.bookncart.app.objects.RecentlyViewedBooksObject;
 import com.bookncart.app.objects.TagObject;
 import com.bookncart.app.widgets.AnimatorUtils;
+import com.bookncart.app.widgets.TouchEventInterceptLinearLayout;
 
 @SuppressLint("NewApi")
 public class HomeActivity extends AppCompatActivity implements OnDragListener {
@@ -49,14 +59,20 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 	DrawerLayout drawerLayout;
 	HomeActivityRecyclerViewAdapter adapter;
 	HomeActivityListObject mData;
-	FrameLayout buttonsLayout;
+	FrameLayout buttonsLayout, mainContentFrame;
 	ImageView favouriteButton, thumbImageView, shareButton, similarButton;
-	int radius, deviceWidth, thumbImageWidth, cornerAllowance;
+	int radius, deviceWidth, thumbImageWidth, cornerAllowance, deviceHeight;
 	float angle, angleCorrection, x, y, leftx, lefty, rightx, righty, touchx,
 			touchy;
 	int toolbarHeight;
 	public static final int TRANSLATION_DURATION = 200;
+	final float scaleFactorForSimilarBooksLayout = 0.6f;
 	AppBarLayout appBarLayout;
+	ImageView similarBooksBackgroundView;
+	TouchEventInterceptLinearLayout similarBooksLayout;
+	FrameLayout similarBooksContainerLayout;
+	public RecyclerView similarBooksRecyclerView;
+	boolean isSimilarBooksLayoutCompletetlyVisible = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +88,11 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		shareButton = (ImageView) findViewById(R.id.sharebutton);
 		similarButton = (ImageView) findViewById(R.id.similarbutton);
 		appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
+		mainContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+		similarBooksLayout = (TouchEventInterceptLinearLayout) findViewById(R.id.linearlayoutsimilarbookslineartouch);
+		similarBooksBackgroundView = (ImageView) findViewById(R.id.similarbookbgview);
+		similarBooksContainerLayout = (FrameLayout) findViewById(R.id.similarbooklayout);
+		similarBooksRecyclerView = (RecyclerView) findViewById(R.id.similarbooks_recycler_view);
 
 		thumbImageView.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
@@ -88,6 +109,21 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		radius = getResources().getDimensionPixelSize(
 				R.dimen.bnc_radius_home_activity);
 		deviceWidth = getResources().getDisplayMetrics().widthPixels;
+
+		appBarLayout.setBackgroundColor(getResources().getColor(
+				android.R.color.transparent));
+
+		mainContentFrame.getViewTreeObserver().addOnGlobalLayoutListener(
+				new OnGlobalLayoutListener() {
+
+					@Override
+					public void onGlobalLayout() {
+						mainContentFrame.getViewTreeObserver()
+								.removeOnGlobalLayoutListener(this);
+						deviceHeight = mainContentFrame.getHeight();
+					}
+				});
+
 		cornerAllowance = getResources().getDimensionPixelSize(
 				R.dimen.bnc_corner_allowance_due_to_padding);
 
@@ -121,6 +157,7 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		recyclerView.setAdapter(adapter);
 
 		favouriteButton.setOnDragListener(this);
+		similarButton.setOnDragListener(this);
 		recyclerView.addOnScrollListener(new OnScrollListener() {
 
 			@Override
@@ -384,6 +421,7 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		animSet.setDuration(100);
 		animSet.playSequentially(animList);
 		animSet.addListener(new MyAnimatorListener() {
+
 			@Override
 			public void onAnimationEnd(Animator animation) {
 				buttonsLayout.setVisibility(View.GONE);
@@ -403,7 +441,6 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 				AnimatorUtils.rotation(720f, 0f),
 				AnimatorUtils.translationX(x, touchx),
 				AnimatorUtils.translationY(y, touchy));
-
 		return anim;
 	}
 
@@ -429,10 +466,235 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 				break;
 			}
 			break;
+		case R.id.similarbutton:
+			switch (event.getAction()) {
+			case DragEvent.ACTION_DRAG_LOCATION:
+				v.setSelected(true);
+				v.invalidate();
+				break;
+			case DragEvent.ACTION_DROP:
+				if (buttonsLayout.getVisibility() != View.GONE)
+					hideButtonsLayout();
+				showSimilarBooksLayout();
+				break;
+			case DragEvent.ACTION_DRAG_EXITED:
+				v.setSelected(false);
+				v.invalidate();
+			}
+			break;
 
 		default:
 			break;
 		}
 		return true;
+	}
+
+	private void hideSimilarButtonsLayout() {
+		isSimilarBooksLayoutCompletetlyVisible = false;
+		appBarLayout.setAlpha(255);
+		similarBooksBackgroundView.setImageAlpha(0);
+		ObjectAnimator recyclerAnimator1 = ObjectAnimator.ofFloat(recyclerView,
+				"scaleX", 1);
+		ObjectAnimator recyclerAnimator2 = ObjectAnimator.ofFloat(recyclerView,
+				"scaleY", 1);
+		ObjectAnimator animTrans = ObjectAnimator.ofFloat(similarBooksLayout,
+				"translationY", deviceHeight);
+		ObjectAnimator animToolbar = ObjectAnimator.ofArgb(
+				toolbar.getBackground(), "alpha", 255);
+
+		List<Animator> animSetList = new ArrayList<>();
+		animSetList.add(animTrans);
+		animSetList.add(recyclerAnimator1);
+		animSetList.add(recyclerAnimator2);
+		animSetList.add(animToolbar);
+
+		AnimatorSet animSet = new AnimatorSet();
+		animSet.setDuration(700);
+		animSet.setInterpolator(new AccelerateDecelerateInterpolator());
+		animSet.addListener(new MyAnimatorListener() {
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				similarBooksContainerLayout.setVisibility(View.GONE);
+			}
+		});
+		animSet.playTogether(animSetList);
+		animSet.start();
+	}
+
+	private void showSimilarBooksLayout() {
+		isSimilarBooksLayoutCompletetlyVisible = false;
+		appBarLayout.setTranslationY(0);
+		appBarLayout.setAlpha(0);
+		similarBooksContainerLayout.setVisibility(View.VISIBLE);
+		similarBooksBackgroundView.setImageAlpha(0);
+		recyclerView.setPivotY(0);
+
+		ObjectAnimator recyclerAnimator1 = ObjectAnimator.ofFloat(recyclerView,
+				"scaleX", 1, scaleFactorForSimilarBooksLayout);
+		ObjectAnimator recyclerAnimator2 = ObjectAnimator.ofFloat(recyclerView,
+				"scaleY", 1, scaleFactorForSimilarBooksLayout);
+		ObjectAnimator animTrans = ObjectAnimator.ofFloat(similarBooksLayout,
+				"translationY", deviceHeight, deviceHeight
+						* scaleFactorForSimilarBooksLayout);
+
+		List<Animator> animSetList = new ArrayList<>();
+		animSetList.add(animTrans);
+		animSetList.add(recyclerAnimator1);
+		animSetList.add(recyclerAnimator2);
+
+		AnimatorSet animSet = new AnimatorSet();
+		animSet.setDuration(700);
+		animSet.setInterpolator(new AccelerateDecelerateInterpolator());
+		animSet.playTogether(animSetList);
+		animSet.start();
+
+		addDataInSimilarBooksRecyclerView();
+	}
+
+	private void addDataInSimilarBooksRecyclerView() {
+		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+		similarBooksRecyclerView.setLayoutManager(gridLayoutManager);
+
+		ArrayList<HomeTopRatedBookObject> similarBooksData = new ArrayList<>();
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		similarBooksData.add(new HomeTopRatedBookObject(0,
+				"ashsh fjkvnjkfkvn dkcnkv kdcnk", 50, false, ""));
+		SimilarBooksRecyclerViewAdapter adapterSimilarBooks = new SimilarBooksRecyclerViewAdapter(
+				similarBooksData, this);
+		similarBooksRecyclerView.setAdapter(adapterSimilarBooks);
+
+		similarBooksBackgroundView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				toolbar.getBackground().setAlpha(0);
+				hideSimilarButtonsLayout();
+			}
+		});
+
+		similarBooksLayout.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					break;
+				case MotionEvent.ACTION_UP:
+					if (similarBooksLayout.getTranslationY() > deviceHeight
+							* scaleFactorForSimilarBooksLayout) {
+						hideSimilarButtonsLayout();
+					} else {
+						if (isSimilarBooksLayoutCompletetlyVisible) {
+							isSimilarBooksLayoutCompletetlyVisible = false;
+							ObjectAnimator animTrans = ObjectAnimator.ofFloat(
+									similarBooksLayout, "translationY",
+									deviceHeight
+											* scaleFactorForSimilarBooksLayout);
+							animTrans.setDuration(400);
+							animTrans
+									.addUpdateListener(new AnimatorUpdateListener() {
+
+										@Override
+										public void onAnimationUpdate(
+												ValueAnimator animation) {
+											float alphaFactor = (float) animation
+													.getAnimatedValue()
+													/ (deviceHeight * scaleFactorForSimilarBooksLayout);
+											int alpha = 255 - (int) (alphaFactor * 255);
+											similarBooksBackgroundView
+													.setImageAlpha(alpha);
+										}
+									});
+							animTrans.start();
+						} else {
+							Log.w("as", "down negative");
+							isSimilarBooksLayoutCompletetlyVisible = true;
+							ObjectAnimator animTrans = ObjectAnimator.ofFloat(
+									similarBooksLayout, "translationY", 0);
+							animTrans.setDuration(400);
+							animTrans
+									.addUpdateListener(new AnimatorUpdateListener() {
+
+										@Override
+										public void onAnimationUpdate(
+												ValueAnimator animation) {
+											float alphaFactor = (float) animation
+													.getAnimatedValue()
+													/ (deviceHeight * scaleFactorForSimilarBooksLayout);
+											int alpha = 255 - (int) (alphaFactor * 255);
+											similarBooksBackgroundView
+													.setImageAlpha(alpha);
+										}
+									});
+							animTrans.start();
+						}
+
+					}
+					return true;
+				case MotionEvent.ACTION_MOVE:
+					if (event.getHistorySize() > 0) {
+						int dy = (int) (event.getY() - event.getHistoricalY(0)) * 2;
+						float requestedTrans = similarBooksLayout
+								.getTranslationY() + dy;
+						if (requestedTrans > deviceHeight)
+							requestedTrans = deviceHeight;
+						else if (requestedTrans < 0) {
+							requestedTrans = 0;
+							isSimilarBooksLayoutCompletetlyVisible = true;
+						}
+
+						if (requestedTrans > deviceHeight
+								* scaleFactorForSimilarBooksLayout) {
+							similarBooksBackgroundView.setImageAlpha(0);
+							float factor = requestedTrans / deviceHeight;
+							recyclerView.setScaleX(factor);
+							recyclerView.setScaleY(factor);
+
+							float rationalisedfactor = (((factor - scaleFactorForSimilarBooksLayout) * (1 - 0)) / (1 - scaleFactorForSimilarBooksLayout)) + 0;
+							int alpha = (int) (rationalisedfactor * 255);
+							appBarLayout.setAlpha(255);
+							toolbar.getBackground().setAlpha(alpha);
+						} else {
+							toolbar.getBackground().setAlpha(0);
+							appBarLayout.setAlpha(0);
+							float alphaFactor = requestedTrans
+									/ (deviceHeight * scaleFactorForSimilarBooksLayout);
+							int alpha = 255 - (int) (alphaFactor * 255);
+							similarBooksBackgroundView.setImageAlpha(alpha);
+						}
+						similarBooksLayout.setTranslationY(requestedTrans);
+					}
+					break;
+
+				default:
+					break;
+				}
+				return true;
+			}
+		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (similarBooksContainerLayout.getVisibility() == View.VISIBLE) {
+			toolbar.getBackground().setAlpha(0);
+			hideSimilarButtonsLayout();
+		} else {
+			super.onBackPressed();
+		}
 	}
 }

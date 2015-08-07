@@ -64,6 +64,66 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/thumb_indicator" />
         </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/similarbooklayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/similarbookbgview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:src="#000000" />
+
+            <com.bookncart.app.widgets.TouchEventInterceptLinearLayout
+                android:id="@+id/linearlayoutsimilarbookslineartouch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bnc_white"
+                android:clickable="true"
+                android:orientation="vertical" >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/bnc_grey_shade_4" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bnc_button_height"
+                    android:gravity="center_vertical" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bnc_margin_small"
+                        android:singleLine="true"
+                        android:text="Books similar to the name of the book here it is"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_small" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/bnc_grey_shade_4" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/similarbooks_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:clipToPadding="false"
+                    android:paddingBottom="@dimen/bnc_margin_small"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingTop="2dp"
+                    android:scrollbars="none" />
+            </com.bookncart.app.widgets.TouchEventInterceptLinearLayout>
+        </FrameLayout>
     </FrameLayout>
 
     <android.support.design.widget.NavigationView
