@@ -33,6 +33,9 @@ import com.bookncart.app.objects.HomeActivityListObject;
 import com.bookncart.app.objects.HomeTopRatedBookObject;
 import com.bookncart.app.objects.RecentlyViewedBooksObject;
 import com.bookncart.app.widgets.CirclePageIndicator;
+import com.bookncart.app.widgets.CustomFlowLayout;
+import com.bookncart.app.widgets.RecyclerViewHorizontalScrolling;
+import com.bookncart.app.widgets.ViewPagerHorizontalScrolling;
 
 public class HomeActivityRecyclerViewAdapter extends
 		RecyclerView.Adapter<RecyclerView.ViewHolder> implements AppConstants {
@@ -156,11 +159,17 @@ public class HomeActivityRecyclerViewAdapter extends
 			break;
 		case BNC_HOME_LIST_TYPE_TAGS: {
 			HomeActivityListTagsViewHolder holder = (HomeActivityListTagsViewHolder) commonHolder;
-			LinearLayoutManager layoutManager = new LinearLayoutManager(
-					context, LinearLayoutManager.HORIZONTAL, false);
-			holder.recyclerView.setLayoutManager(layoutManager);
-			TagsRecyclerAdapter adapter = new TagsRecyclerAdapter();
-			holder.recyclerView.setAdapter(adapter);
+			holder.customFlowLayout.removeAllViews();
+			for (int i = 0; i < mData.getTags().size(); i++) {
+				View view = LayoutInflater.from(context).inflate(
+						R.layout.tag_layout_blue, holder.customFlowLayout,
+						false);
+
+				TextView tagName = (TextView) view.findViewById(R.id.tag_name);
+				tagName.setText(mData.getTags().get(i).getName());
+
+				holder.customFlowLayout.addView(view);
+			}
 		}
 			break;
 		case BNC_HOME_LIST_TYPE_CURRENTLY_ACTIVE: {
@@ -242,12 +251,12 @@ public class HomeActivityRecyclerViewAdapter extends
 
 	class HomeActivityListHeaderViewHolder extends RecyclerView.ViewHolder {
 
-		ViewPager viewPagerHeader;
+		ViewPagerHorizontalScrolling viewPagerHeader;
 		CirclePageIndicator pageIndicator;
 
 		public HomeActivityListHeaderViewHolder(View v) {
 			super(v);
-			viewPagerHeader = (ViewPager) v
+			viewPagerHeader = (ViewPagerHorizontalScrolling) v
 					.findViewById(R.id.pager_home_header);
 			pageIndicator = (CirclePageIndicator) v
 					.findViewById(R.id.circle_page_indicator);
@@ -257,13 +266,13 @@ public class HomeActivityRecyclerViewAdapter extends
 	class HomeActivityListTopRatedViewHolder extends RecyclerView.ViewHolder {
 
 		TextView headingText;
-		RecyclerView recyclerView;
+		RecyclerViewHorizontalScrolling recyclerView;
 		LinearLayout showMoreBooksLayout;
 
 		public HomeActivityListTopRatedViewHolder(View v) {
 			super(v);
 			headingText = (TextView) v.findViewById(R.id.home_heading_text);
-			recyclerView = (RecyclerView) v
+			recyclerView = (RecyclerViewHorizontalScrolling) v
 					.findViewById(R.id.home_recycler_view_toprated);
 			showMoreBooksLayout = (LinearLayout) v
 					.findViewById(R.id.topratedmorebookslayout);
@@ -272,12 +281,12 @@ public class HomeActivityRecyclerViewAdapter extends
 
 	class HomeActivityListTagsViewHolder extends RecyclerView.ViewHolder {
 
-		RecyclerView recyclerView;
+		CustomFlowLayout customFlowLayout;
 
 		public HomeActivityListTagsViewHolder(View v) {
 			super(v);
-			recyclerView = (RecyclerView) v
-					.findViewById(R.id.recycler_view_tags);
+			customFlowLayout = (CustomFlowLayout) v
+					.findViewById(R.id.tagcustomflowlayouthome);
 		}
 	}
 
@@ -419,39 +428,6 @@ public class HomeActivityRecyclerViewAdapter extends
 
 			public RecentlyViewedBooksRecyclerHolder(View v) {
 				super(v);
-			}
-		}
-	}
-
-	class TagsRecyclerAdapter extends
-			RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-		@Override
-		public int getItemCount() {
-			return mData.getTags().size();
-		}
-
-		@Override
-		public void onBindViewHolder(ViewHolder holderCommon, int pos) {
-			TagsRecyclerHolder holder = (TagsRecyclerHolder) holderCommon;
-			holder.tagName.setText("Ashish");
-		}
-
-		@Override
-		public ViewHolder onCreateViewHolder(ViewGroup parent, int viewtype) {
-			View v = LayoutInflater.from(context).inflate(
-					R.layout.tag_layout_blue, parent, false);
-			TagsRecyclerHolder holder = new TagsRecyclerHolder(v);
-			return holder;
-		}
-
-		class TagsRecyclerHolder extends RecyclerView.ViewHolder {
-
-			TextView tagName;
-
-			public TagsRecyclerHolder(View v) {
-				super(v);
-				tagName = (TextView) v.findViewById(R.id.tag_name);
 			}
 		}
 	}

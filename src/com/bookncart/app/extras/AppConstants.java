@@ -21,4 +21,17 @@ public interface AppConstants {
 	public static final int BNC_SHOP_DISPLAY_TYPE_GRID = 1;
 	public static final int BNC_SHOP_DISPLAY_TYPE_LIST = 2;
 	public static final int BNC_SHOP_DISPLAY_TYPE_LONG_LIST = 3;
+
+	// SHOP ACTIVITY FILTERS
+	public static final int BNC_SHOP_FILTER_CONDITION_OLD = 0;
+	public static final int BNC_SHOP_FILTER_CONDITION_NEW = 1;
+	public static final int BNC_SHOP_FILTER_CONDITION_BOTH = 2;
+	public static final int BNC_SHOP_FILTER_FEATURED_FEATURED = 0;
+	public static final int BNC_SHOP_FILTER_FEATURED_NONFEATURED = 1;
+	public static final int BNC_SHOP_FILTER_FEATURED_BOTH = 2;
+
+	// CART FRAGMENT
+	public static final int BNC_CART_LIST_TYPE_HEADER = 0;
+	public static final int BNC_CART_LIST_TYPE_FOOTER = 1;
+	public static final int BNC_CART_LIST_TYPE_CART_ITEM = 2;
 }

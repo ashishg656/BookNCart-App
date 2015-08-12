@@ -23,7 +23,7 @@
         android:paddingLeft="@dimen/bnc_margin_mini"
         android:paddingRight="@dimen/bnc_margin_mini"
         android:text="Book name here can be long too old"
-        android:textColor="@color/bnc_text_color_dark"
+        android:textColor="@color/bnc_text_color_medium_dark"
         android:textSize="@dimen/bnc_font_supermini" />
 
     <LinearLayout

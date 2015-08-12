@@ -69,9 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bnc_button_height"
                 android:layout_gravity="bottom"
-                android:clipToPadding="false"
-                android:paddingLeft="90dp"
-                android:paddingRight="90dp"
+                app:pstsPaddingMiddle="true"
                 app:pstsIndicatorColor="@color/bnc_white"
                 app:pstsTextAllCaps="true"
                 app:pstsTextColorSelected="@color/bnc_white" >

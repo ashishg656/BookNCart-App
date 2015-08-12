@@ -19,7 +19,7 @@
     <dimen name="bnc_home_top_rated_book_image_width">150dp</dimen>
     <dimen name="bnc_home_top_rated_book_image_height">150dp</dimen>
     <dimen name="bnc_home_top_rated_viewpager_height">215dp</dimen>
-    <dimen name="bnc_home_tag_list_height">40dp</dimen>
+    <dimen name="bnc_home_tag_list_height">130dp</dimen>
     <dimen name="bnc_home_recent_book_image_width">120dp</dimen>
     <dimen name="bnc_home_recent_book_image_height">120dp</dimen>
     <dimen name="bnc_home_recent_viewpager_height">180dp</dimen>
@@ -32,5 +32,9 @@
     <dimen name="bnc_shop_filter_layout_height">42dp</dimen>
     <dimen name="bnc_shop_list_image_height">100dp</dimen>
     <dimen name="bnc_shop_list_image_width">90dp</dimen>
+
+    <!-- Cart Fragment -->
+    <dimen name="bnc_cart_list_image_height">110dp</dimen>
+    <dimen name="bnc_cart_list_image_width">100dp</dimen>
 
 </resources>

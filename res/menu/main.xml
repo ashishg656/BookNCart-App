@@ -4,9 +4,22 @@
     tools:context="com.bookncart.app.MainActivity" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_with_padding"
+        android:orderInCategory="1"
+        android:title="Search"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_wishlist"
+        android:icon="@drawable/ic_wishlist_with_padding"
+        android:orderInCategory="2"
+        android:title="Wishlist"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_cart"
+        android:icon="@drawable/ic_cart_with_padding"
+        android:orderInCategory="3"
+        android:title="Cart"
+        app:showAsAction="always"/>
 
 </menu>

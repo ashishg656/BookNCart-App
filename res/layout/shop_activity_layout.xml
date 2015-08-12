@@ -4,81 +4,91 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/shop_recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/bnc_margin_small"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="102dp"
-        android:scrollbars="none" />
+        android:orientation="vertical" >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbarlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <include layout="@layout/toolbar_layout_without_drop_shadow_white_text" />
-
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/shop_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bnc_shop_filter_layout_height"
-            android:background="@color/bnc_white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/bnc_margin_small"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="102dp"
+            android:scrollbars="none" />
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbarlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <include layout="@layout/toolbar_layout_without_drop_shadow_white_text" />
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bnc_shop_filter_layout_height"
+                android:background="@color/bnc_white"
+                android:gravity="center_vertical"
                 android:orientation="horizontal" >
 
+                <LinearLayout
+                    android:id="@+id/sort_layput_shop"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="@dimen/bnc_shop_activity_filter_button_size"
+                        android:layout_height="@dimen/bnc_shop_activity_filter_button_size"
+                        android:src="@drawable/sort_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bnc_margin_small"
+                        android:text="SORT"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filtersbutton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="@dimen/bnc_shop_activity_filter_button_size"
+                        android:layout_height="@dimen/bnc_shop_activity_filter_button_size"
+                        android:src="@drawable/filter_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/bnc_margin_small"
+                        android:text="FILTERS"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
                 <ImageView
+                    android:id="@+id/changelistviewtype"
                     android:layout_width="@dimen/bnc_shop_activity_filter_button_size"
                     android:layout_height="@dimen/bnc_shop_activity_filter_button_size"
-                    android:src="@drawable/sort_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/bnc_margin_small"
-                    android:text="SORT"
-                    android:textColor="@color/bnc_text_color_dark"
-                    android:textSize="@dimen/bnc_font_supermini" />
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/list_icon" />
             </LinearLayout>
+        </android.support.design.widget.AppBarLayout>
+    </FrameLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="@dimen/bnc_shop_activity_filter_button_size"
-                    android:layout_height="@dimen/bnc_shop_activity_filter_button_size"
-                    android:src="@drawable/filter_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/bnc_margin_small"
-                    android:text="FILTERS"
-                    android:textColor="@color/bnc_text_color_dark"
-                    android:textSize="@dimen/bnc_font_supermini" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/changelistviewtype"
-                android:layout_width="@dimen/bnc_shop_activity_filter_button_size"
-                android:layout_height="@dimen/bnc_shop_activity_filter_button_size"
-                android:layout_marginLeft="@dimen/bnc_margin_small"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/list_icon" />
-        </LinearLayout>
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/shop_activity_filter_layout" />
 
 </FrameLayout>

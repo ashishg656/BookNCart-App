@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res/com.bookncart.app"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filterslayoutshop"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bnc_grey_shade_1"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/bnc_button_height" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/bnc_margin_small"
+                android:layout_marginLeft="@dimen/bnc_margin_small"
+                android:layout_marginRight="@dimen/bnc_margin_small"
+                android:layout_marginTop="@dimen/bnc_margin_medium"
+                android:background="@drawable/shadow_bg"
+                android:orientation="vertical"
+                android:padding="@dimen/bnc_margin_small" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price Filter"
+                    android:textColor="@color/PrimaryColor"
+                    android:textSize="@dimen/bnc_font_small"
+                    android:textStyle="bold" />
+
+                <com.bookncart.app.widgets.RangeSeekBar
+                    android:id="@+id/rangeseekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/bnc_margin_small"
+                    android:layout_marginTop="@dimen/bnc_margin_small"
+                    app:showLabels="false"
+                    app:valuesAboveThumbs="false" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/bnc_margin_small"
+                    android:layout_marginLeft="@dimen/bnc_margin_small"
+                    android:layout_marginRight="@dimen/bnc_margin_small" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center" >
+
+                        <EditText
+                            android:id="@+id/minpricetext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:gravity="center"
+                            android:text="₹ 0"
+                            android:textColor="@color/bnc_green_normal" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/bnc_margin_mini"
+                        android:text="TO"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_mini" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center" >
+
+                        <EditText
+                            android:id="@+id/maxpricetext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:gravity="center"
+                            android:text="₹ 10,000"
+                            android:textColor="@color/bnc_green_normal" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/bnc_margin_small"
+                android:layout_marginLeft="@dimen/bnc_margin_small"
+                android:layout_marginRight="@dimen/bnc_margin_small"
+                android:background="@drawable/shadow_bg"
+                android:orientation="vertical"
+                android:padding="@dimen/bnc_margin_small" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Book Condition Filter"
+                    android:textColor="@color/PrimaryColor"
+                    android:textSize="@dimen/bnc_font_small"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/bnc_margin_small"
+                    android:layout_marginTop="@dimen/bnc_margin_small"
+                    android:orientation="vertical" >
+
+                    <CheckBox
+                        android:id="@+id/oldbookscheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Old Books" />
+
+                    <CheckBox
+                        android:id="@+id/newbookscheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="New Books" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/bnc_margin_small"
+                android:layout_marginRight="@dimen/bnc_margin_small"
+                android:background="@drawable/shadow_bg"
+                android:orientation="vertical"
+                android:padding="@dimen/bnc_margin_small" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Featured Books Filter"
+                    android:textColor="@color/PrimaryColor"
+                    android:textSize="@dimen/bnc_font_small"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/bnc_margin_small"
+                    android:layout_marginTop="@dimen/bnc_margin_small"
+                    android:orientation="vertical" >
+
+                    <CheckBox
+                        android:id="@+id/featuredbookscheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Featured Books" />
+
+                    <CheckBox
+                        android:id="@+id/nonfeaturedbookscheckbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Non-Featured Books" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/bnc_margin_small" >
+
+                <Button
+                    android:id="@+id/discradfilterchanges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="discard changes" />
+
+                <Button
+                    android:id="@+id/resetfilters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/bnc_margin_small"
+                    android:text="reset filters" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/applyfiltersbutton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bnc_button_height"
+        android:layout_gravity="bottom"
+        android:background="@color/PrimaryColor"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="APPLY"
+            android:textColor="@color/bnc_white"
+            android:textSize="@dimen/bnc_font_small" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -44,13 +44,13 @@
                 android:id="@+id/sharebutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bnc_like_button_bg_selector" />
+                android:background="@drawable/bnc_share_button_bg_selector" />
 
             <ImageView
                 android:id="@+id/similarbutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bnc_like_button_bg_selector" />
+                android:background="@drawable/bnc_similar_button_bg_selector" />
 
             <ImageView
                 android:id="@+id/favouritebutton"
@@ -69,8 +69,7 @@
             android:id="@+id/similarbooklayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:visibility="gone" >
+            android:clickable="true" >
 
             <ImageView
                 android:id="@+id/similarbookbgview"

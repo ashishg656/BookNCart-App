@@ -2,29 +2,42 @@ package com.bookncart.app.activities;
 
 import java.util.ArrayList;
 
-import com.bookncart.app.R;
-import com.bookncart.app.adapters.ShopActivityListAdapter;
-import com.bookncart.app.extras.AppConstants;
-import com.bookncart.app.objects.HomeTopRatedBookObject;
-
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bookncart.app.R;
+import com.bookncart.app.adapters.ShopActivityListAdapter;
+import com.bookncart.app.extras.AppConstants;
+import com.bookncart.app.extras.MyAnimatorListener;
+import com.bookncart.app.objects.HomeTopRatedBookObject;
+import com.bookncart.app.widgets.RangeSeekBar;
+import com.bookncart.app.widgets.RangeSeekBar.OnRangeSeekBarChangeListener;
+
+@SuppressLint("NewApi")
 public class ShopActivity extends AppCompatActivity implements AppConstants,
 		OnClickListener {
 
@@ -42,6 +55,21 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 	ArrayList<HomeTopRatedBookObject> mData;
 	ImageView changeDisplayTypeButton;
 	public int currentDisplayType = BNC_SHOP_DISPLAY_TYPE_GRID;
+	LinearLayout sortButtonLayout, filtersButtonLayout;
+	String[] sortingOptions = { "Name", "price", "Author name", "Popularity" };
+	int currentSelectedSortingMode = 0;
+	int minPriceRange = 0, maxPriceRange = 10000;
+	int selectedMinPriceRange = minPriceRange,
+			selectedMaxPriceRange = maxPriceRange;
+	RangeSeekBar<Integer> rangeSeekBar;
+	FrameLayout filtersLayoutContainer;
+	EditText minPriceRangeEditText, maxPriceRangeEditText;
+	Button discardFilterChangesButton, resetFiltersButton;
+	int selectedFeaturedFilter = BNC_SHOP_FILTER_FEATURED_BOTH;
+	int selectedConditionFilter = BNC_SHOP_FILTER_CONDITION_BOTH;
+	CheckBox oldBooksCheckBox, newBooksCheckBox, featuredBooksCheckBox,
+			nonFeaturedBooksCheckBox;
+	LinearLayout applyFiltersButton;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -52,6 +80,19 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 		recyclerView = (RecyclerView) findViewById(R.id.shop_recycler_view);
 		appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
 		changeDisplayTypeButton = (ImageView) findViewById(R.id.changelistviewtype);
+		sortButtonLayout = (LinearLayout) findViewById(R.id.sort_layput_shop);
+		filtersButtonLayout = (LinearLayout) findViewById(R.id.filtersbutton);
+		rangeSeekBar = (RangeSeekBar<Integer>) findViewById(R.id.rangeseekbar);
+		filtersLayoutContainer = (FrameLayout) findViewById(R.id.filterslayoutshop);
+		minPriceRangeEditText = (EditText) findViewById(R.id.minpricetext);
+		maxPriceRangeEditText = (EditText) findViewById(R.id.maxpricetext);
+		discardFilterChangesButton = (Button) findViewById(R.id.discradfilterchanges);
+		resetFiltersButton = (Button) findViewById(R.id.resetfilters);
+		oldBooksCheckBox = (CheckBox) findViewById(R.id.oldbookscheckbox);
+		newBooksCheckBox = (CheckBox) findViewById(R.id.newbookscheckbox);
+		featuredBooksCheckBox = (CheckBox) findViewById(R.id.featuredbookscheckbox);
+		nonFeaturedBooksCheckBox = (CheckBox) findViewById(R.id.nonfeaturedbookscheckbox);
+		applyFiltersButton = (LinearLayout) findViewById(R.id.applyfiltersbutton);
 
 		toolBar = (Toolbar) findViewById(R.id.toolbar);
 		toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
@@ -62,6 +103,11 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 				.getColor(R.color.PrimaryColor));
 
 		changeDisplayTypeButton.setOnClickListener(this);
+		sortButtonLayout.setOnClickListener(this);
+		filtersButtonLayout.setOnClickListener(this);
+		resetFiltersButton.setOnClickListener(this);
+		discardFilterChangesButton.setOnClickListener(this);
+		applyFiltersButton.setOnClickListener(this);
 
 		appBarLayout.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
@@ -204,6 +250,7 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 				50, false, ""));
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -229,9 +276,170 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 				recyclerView.setLayoutManager(gridLayoutManager);
 			}
 			break;
+		case R.id.sort_layput_shop:
+			showSortingOptionsDialog();
+			break;
+		case R.id.filtersbutton:
+			showFiltersOptionsLayout();
+			break;
+		case R.id.discradfilterchanges:
+			hidefiltersButtonLayout();
+			break;
+		case R.id.resetfilters:
+			resetFiltersContent();
+			break;
+		case R.id.applyfiltersbutton:
+			applyFiltersButtonClicked();
+			break;
 
 		default:
 			break;
 		}
+	}
+
+	private void hidefiltersButtonLayout() {
+		ObjectAnimator anim = ObjectAnimator
+				.ofFloat(filtersLayoutContainer, "translationY", getResources()
+						.getDisplayMetrics().heightPixels);
+		anim.addListener(new MyAnimatorListener() {
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				filtersLayoutContainer.setVisibility(View.GONE);
+			}
+		});
+		anim.setDuration(400);
+		anim.start();
+	}
+
+	private void showFiltersOptionsLayout() {
+		filtersLayoutContainer.setVisibility(View.VISIBLE);
+		filtersLayoutContainer.setTranslationX(getResources()
+				.getDisplayMetrics().widthPixels);
+		filtersLayoutContainer.setTranslationY(0);
+		filtersLayoutContainer.animate().translationX(0).setDuration(400)
+				.start();
+
+		fillDataInFiltersLayout();
+	}
+
+	private void fillDataInFiltersLayout() {
+		rangeSeekBar.setRangeValues(minPriceRange, maxPriceRange);
+		rangeSeekBar.setSelectedMaxValue(selectedMaxPriceRange);
+		rangeSeekBar.setSelectedMinValue(selectedMinPriceRange);
+		minPriceRangeEditText.setText("₹ " + selectedMinPriceRange);
+		maxPriceRangeEditText.setText("₹ " + selectedMaxPriceRange);
+		rangeSeekBar.setNotifyWhileDragging(true);
+		rangeSeekBar
+				.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
+
+					@Override
+					public void onRangeSeekBarValuesChanged(
+							RangeSeekBar<?> bar, Integer minValue,
+							Integer maxValue) {
+						minPriceRangeEditText.setText("₹ " + minValue);
+						maxPriceRangeEditText.setText("₹ " + maxValue);
+					}
+				});
+		switch (selectedConditionFilter) {
+		case BNC_SHOP_FILTER_CONDITION_BOTH:
+			oldBooksCheckBox.setChecked(true);
+			newBooksCheckBox.setChecked(true);
+			break;
+		case BNC_SHOP_FILTER_CONDITION_NEW:
+			oldBooksCheckBox.setChecked(false);
+			newBooksCheckBox.setChecked(true);
+			break;
+		case BNC_SHOP_FILTER_CONDITION_OLD:
+			oldBooksCheckBox.setChecked(true);
+			newBooksCheckBox.setChecked(false);
+			break;
+		}
+		switch (selectedFeaturedFilter) {
+		case BNC_SHOP_FILTER_FEATURED_BOTH:
+			featuredBooksCheckBox.setChecked(true);
+			nonFeaturedBooksCheckBox.setChecked(true);
+			break;
+		case BNC_SHOP_FILTER_FEATURED_FEATURED:
+			featuredBooksCheckBox.setChecked(true);
+			nonFeaturedBooksCheckBox.setChecked(false);
+			break;
+		case BNC_SHOP_FILTER_FEATURED_NONFEATURED:
+			featuredBooksCheckBox.setChecked(false);
+			nonFeaturedBooksCheckBox.setChecked(true);
+			break;
+		}
+	}
+
+	private void applyFiltersButtonClicked() {
+		selectedMaxPriceRange = rangeSeekBar.getSelectedMaxValue();
+		selectedMinPriceRange = rangeSeekBar.getSelectedMinValue();
+		if (oldBooksCheckBox.isChecked() && !newBooksCheckBox.isChecked()) {
+			selectedConditionFilter = BNC_SHOP_FILTER_CONDITION_OLD;
+		} else if (!oldBooksCheckBox.isChecked()
+				&& newBooksCheckBox.isChecked()) {
+			selectedConditionFilter = BNC_SHOP_FILTER_CONDITION_NEW;
+		} else {
+			selectedConditionFilter = BNC_SHOP_FILTER_CONDITION_BOTH;
+		}
+
+		if (featuredBooksCheckBox.isChecked()
+				&& !nonFeaturedBooksCheckBox.isChecked()) {
+			selectedFeaturedFilter = BNC_SHOP_FILTER_FEATURED_FEATURED;
+		} else if (!featuredBooksCheckBox.isChecked()
+				&& nonFeaturedBooksCheckBox.isChecked()) {
+			selectedFeaturedFilter = BNC_SHOP_FILTER_FEATURED_NONFEATURED;
+		} else {
+			selectedFeaturedFilter = BNC_SHOP_FILTER_FEATURED_BOTH;
+		}
+
+		hidefiltersButtonLayout();
+	}
+
+	private void resetFiltersContent() {
+		selectedMinPriceRange = minPriceRange;
+		selectedMaxPriceRange = maxPriceRange;
+		selectedConditionFilter = BNC_SHOP_FILTER_CONDITION_BOTH;
+		selectedFeaturedFilter = BNC_SHOP_FILTER_FEATURED_BOTH;
+		fillDataInFiltersLayout();
+	}
+
+	private void showSortingOptionsDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Sort By");
+		builder.setSingleChoiceItems(sortingOptions,
+				currentSelectedSortingMode,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (which == currentSelectedSortingMode)
+							dialog.cancel();
+						else {
+							currentSelectedSortingMode = which;
+							dialog.cancel();
+							Toast.makeText(ShopActivity.this,
+									"Load data for current sorting mode",
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+		builder.setNegativeButton("cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+
+		AlertDialog dialog = builder.create();
+		dialog.show();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (filtersLayoutContainer.getVisibility() == View.VISIBLE)
+			hidefiltersButtonLayout();
+		else
+			super.onBackPressed();
 	}
 }

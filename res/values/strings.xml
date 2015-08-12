@@ -13,5 +13,7 @@
     <string name="bnc_new_added_books">Latest Books</string>
     <string name="bnc_currently_active_books">Currently Active Books</string>
     <string name="bnc_recently_viewed_books">Recently Viewed Books</string>
+    <string name="demo_min_label">Min</string>
+    <string name="demo_max_label">Max</string>
 
 </resources>

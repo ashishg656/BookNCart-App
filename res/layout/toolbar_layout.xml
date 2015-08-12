@@ -4,24 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/toolbar"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:gravity="center_vertical"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        android:layout_height="wrap_content" >
+
+        <android.support.v7.widget.Toolbar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center_vertical"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="3dp"
+                android:text="BookNCart"
+                android:textColor="@color/bnc_white"
+                android:textSize="22sp" />
+        </android.support.v7.widget.Toolbar>
 
         <TextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="3dp"
-            android:text="BookNCart"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="@dimen/bnc_margin_mini"
+            android:background="@drawable/circle_bg_toolbar_item_text_count"
+            android:gravity="center"
+            android:text="999"
             android:textColor="@color/bnc_white"
-            android:textSize="22sp" />
-    </android.support.v7.widget.Toolbar>
+            android:textSize="@dimen/bnc_font_mini" />
+
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:layout_margin="@dimen/bnc_margin_mini"
+            android:background="@drawable/circle_bg_toolbar_item_text_count"
+            android:gravity="center"
+            android:text="999"
+            android:textColor="@color/bnc_white"
+            android:textSize="@dimen/bnc_font_mini" />
+    </FrameLayout>
 
 </android.support.design.widget.AppBarLayout>

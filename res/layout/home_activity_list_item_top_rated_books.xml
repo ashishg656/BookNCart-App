@@ -21,8 +21,7 @@
             android:layout_weight="1"
             android:text="Top Rated Books"
             android:textColor="@color/bnc_text_color_dark"
-            android:textSize="@dimen/bnc_font_medium"
-            android:textStyle="bold" />
+            android:textSize="@dimen/bnc_font_small" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,13 +33,13 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <com.bookncart.app.widgets.RecyclerViewHorizontalScrolling
         android:id="@+id/home_recycler_view_toprated"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bnc_home_top_rated_viewpager_height"
         android:clipToPadding="false"
-        android:paddingLeft="@dimen/bnc_margin_supermini"
-        android:paddingRight="@dimen/bnc_margin_supermini"
+        android:paddingLeft="@dimen/bnc_margin_mini"
+        android:paddingRight="@dimen/bnc_margin_mini"
         android:scrollbars="none" />
 
 </LinearLayout>

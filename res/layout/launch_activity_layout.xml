@@ -57,6 +57,11 @@
                 android:layout_height="wrap_content"
                 android:text="Login with facebook"
                 android:textColor="@android:color/white" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/google_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 

@@ -9,6 +9,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -66,6 +68,8 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 			touchy;
 	int toolbarHeight;
 	public static final int TRANSLATION_DURATION = 200;
+	public static final int ANIMATION_DURATION_SIMILAR_BOOKS = 400;
+	public static final int ANIMATION_DURATION_SIMILAR_BOOKS_LONG = 700;
 	final float scaleFactorForSimilarBooksLayout = 0.6f;
 	AppBarLayout appBarLayout;
 	ImageView similarBooksBackgroundView;
@@ -151,6 +155,8 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		setDrawerItemClickListener();
 		setDrawerActionBarToggle();
 
+		similarBooksContainerLayout.setVisibility(View.GONE);
+
 		addData();
 
 		adapter = new HomeActivityRecyclerViewAdapter(this, mData);
@@ -158,6 +164,7 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 
 		favouriteButton.setOnDragListener(this);
 		similarButton.setOnDragListener(this);
+		shareButton.setOnDragListener(this);
 		recyclerView.addOnScrollListener(new OnScrollListener() {
 
 			@Override
@@ -222,16 +229,18 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		recentlyViewedBooks.add(new RecentlyViewedBooksObject(0, "", 50, false,
 				""));
 		ArrayList<TagObject> tags = new ArrayList<>();
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
-		tags.add(new TagObject(0, ""));
+		for (int i = 0; i < 6; i++) {
+			tags.add(new TagObject(0, "ashish"));
+			tags.add(new TagObject(0, "engineering"));
+			tags.add(new TagObject(0, "computer"));
+			tags.add(new TagObject(0, "graphics"));
+			tags.add(new TagObject(0, "electronice"));
+			tags.add(new TagObject(0, "hydro"));
+			tags.add(new TagObject(0, "yo"));
+			tags.add(new TagObject(0, "ashish"));
+			tags.add(new TagObject(0, "arbitrary"));
+			tags.add(new TagObject(0, "hello"));
+		}
 		mData = new HomeActivityListObject(headerImages, categoriesImages,
 				categoriesImagesId, topRatedBooks, topRatedBooks,
 				topRatedBooks, topRatedBooks, recentlyViewedBooks,
@@ -256,6 +265,17 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 		actionBarDrawerToggle.syncState();
 		navigationView.setItemIconTintList(null);
+	}
+
+	private int getCurrentVersionNo() {
+		int v = 0;
+		try {
+			v = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+			Toast.makeText(this, "App version " + v, Toast.LENGTH_SHORT).show();
+		} catch (NameNotFoundException e) {
+			// Huh? Really?
+		}
+		return v;
 	}
 
 	private void setDrawerItemClickListener() {
@@ -325,11 +345,18 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		// if (id == R.id.action_cart) {
-		// return true;
-		// } else if (id == R.id.action_search) {
-		// return true;
-		// }
+		if (id == R.id.action_cart) {
+			Intent intent = new Intent(this, WishlistAndCartActivity.class);
+			startActivity(intent);
+			return true;
+		} else if (id == R.id.action_search) {
+			return true;
+		} else if (id == R.id.action_wishlist) {
+			Intent intent = new Intent(this, WishlistAndCartActivity.class);
+			intent.putExtra("wishlist", true);
+			startActivity(intent);
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -339,7 +366,7 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 
 	public void setButtonsLocation(View v, final DragEvent event) {
 		angle = 270;
-		angleCorrection = 15;
+		angleCorrection = 0;
 
 		touchx = event.getX() - thumbImageWidth / 1.5f;
 		touchy = event.getY() - thumbImageWidth / 1.5f;
@@ -482,6 +509,20 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 				v.invalidate();
 			}
 			break;
+		case R.id.sharebutton:
+			switch (event.getAction()) {
+			case DragEvent.ACTION_DRAG_LOCATION:
+				v.setSelected(true);
+				v.invalidate();
+				break;
+			case DragEvent.ACTION_DROP:
+				showShareingOptionsLayout();
+				break;
+			case DragEvent.ACTION_DRAG_EXITED:
+				v.setSelected(false);
+				v.invalidate();
+			}
+			break;
 
 		default:
 			break;
@@ -489,7 +530,17 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		return true;
 	}
 
-	private void hideSimilarButtonsLayout() {
+	private void showShareingOptionsLayout() {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+		sendIntent.setType("text/plain");
+		if (sendIntent.resolveActivity(getPackageManager()) != null) {
+			startActivity(Intent.createChooser(sendIntent, "Share this book"));
+		}
+	}
+
+	private void hideSimilarButtonsLayout(int duration) {
 		isSimilarBooksLayoutCompletetlyVisible = false;
 		appBarLayout.setAlpha(255);
 		similarBooksBackgroundView.setImageAlpha(0);
@@ -509,7 +560,7 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		animSetList.add(animToolbar);
 
 		AnimatorSet animSet = new AnimatorSet();
-		animSet.setDuration(700);
+		animSet.setDuration(duration);
 		animSet.setInterpolator(new AccelerateDecelerateInterpolator());
 		animSet.addListener(new MyAnimatorListener() {
 
@@ -543,11 +594,20 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 		animSetList.add(recyclerAnimator1);
 		animSetList.add(recyclerAnimator2);
 
-		AnimatorSet animSet = new AnimatorSet();
-		animSet.setDuration(700);
+		final AnimatorSet animSet = new AnimatorSet();
+		animSet.setDuration(ANIMATION_DURATION_SIMILAR_BOOKS);
 		animSet.setInterpolator(new AccelerateDecelerateInterpolator());
 		animSet.playTogether(animSetList);
-		animSet.start();
+		similarBooksContainerLayout.getViewTreeObserver()
+				.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+					@Override
+					public void onGlobalLayout() {
+						similarBooksContainerLayout.getViewTreeObserver()
+								.removeOnGlobalLayoutListener(this);
+						animSet.start();
+					}
+				});
 
 		addDataInSimilarBooksRecyclerView();
 	}
@@ -582,7 +642,7 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 			@Override
 			public void onClick(View v) {
 				toolbar.getBackground().setAlpha(0);
-				hideSimilarButtonsLayout();
+				hideSimilarButtonsLayout(ANIMATION_DURATION_SIMILAR_BOOKS);
 			}
 		});
 
@@ -596,7 +656,7 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 				case MotionEvent.ACTION_UP:
 					if (similarBooksLayout.getTranslationY() > deviceHeight
 							* scaleFactorForSimilarBooksLayout) {
-						hideSimilarButtonsLayout();
+						hideSimilarButtonsLayout(ANIMATION_DURATION_SIMILAR_BOOKS);
 					} else {
 						if (isSimilarBooksLayoutCompletetlyVisible) {
 							isSimilarBooksLayoutCompletetlyVisible = false;
@@ -692,7 +752,12 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 	public void onBackPressed() {
 		if (similarBooksContainerLayout.getVisibility() == View.VISIBLE) {
 			toolbar.getBackground().setAlpha(0);
-			hideSimilarButtonsLayout();
+			if (similarBooksLayout.getTranslationY() < deviceHeight
+					* scaleFactorForSimilarBooksLayout) {
+				hideSimilarButtonsLayout(ANIMATION_DURATION_SIMILAR_BOOKS_LONG);
+			} else {
+				hideSimilarButtonsLayout(ANIMATION_DURATION_SIMILAR_BOOKS);
+			}
 		} else {
 			super.onBackPressed();
 		}

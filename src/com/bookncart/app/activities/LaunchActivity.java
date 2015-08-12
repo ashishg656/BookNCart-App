@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.animation.ArgbEvaluator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -24,15 +26,28 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bookncart.app.R;
 import com.bookncart.app.fragments.LaunchScreen1Fragment;
 import com.bookncart.app.fragments.LaunchScreen4Fragment;
 import com.bookncart.app.widgets.CirclePageIndicator;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.People.LoadPeopleResult;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 
 @SuppressLint("NewApi")
 public class LaunchActivity extends AppCompatActivity implements
-		OnPageChangeListener, OnClickListener {
+		OnPageChangeListener, OnClickListener,
+		GoogleApiClient.ConnectionCallbacks,
+		GoogleApiClient.OnConnectionFailedListener,
+		ResultCallback<LoadPeopleResult> {
 
 	ViewPager viewPager;
 	ArgbEvaluator argbEvaluator;
@@ -47,6 +62,18 @@ public class LaunchActivity extends AppCompatActivity implements
 	int loginButtonsLayoutHeight, skipButtonHeight;
 	RelativeLayout skipButtonLayout;
 	TextView skipButton;
+	SignInButton googleLoginButton;
+
+	// GOOGLE API
+	/* Request code used to invoke sign in user interactions. */
+	private static final int RC_SIGN_IN = 0;
+	/* Client used to interact with Google APIs. */
+	private GoogleApiClient mGoogleApiClient;
+	/* Is there a ConnectionResult resolution in progress? */
+	private boolean mIsResolving = false;
+	/* Should we automatically resolve ConnectionResults when possible? */
+	private boolean mShouldResolve = false;
+	private static final int PROFILE_PIC_SIZE = 400;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +90,7 @@ public class LaunchActivity extends AppCompatActivity implements
 		loginButtonsContainerLayout = (LinearLayout) findViewById(R.id.indicatorandbuttonslayout);
 		loginButtonsLayout = (LinearLayout) findViewById(R.id.login_buttons);
 		skipButtonLayout = (RelativeLayout) findViewById(R.id.skipbuttonlayout);
+		googleLoginButton = (SignInButton) findViewById(R.id.google_sign_in_button);
 
 		try {
 			Field mScroller = ViewPager.class.getDeclaredField("mScroller");
@@ -119,6 +147,22 @@ public class LaunchActivity extends AppCompatActivity implements
 		pageIndicator.setViewPager(viewPager);
 
 		skipButton.setOnClickListener(this);
+		googleLoginButton.setOnClickListener(this);
+
+		initialiseGoogleApiClient();
+	}
+
+	@Override
+	protected void onStart() {
+		mGoogleApiClient.connect();
+		super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		if (mGoogleApiClient.isConnected())
+			mGoogleApiClient.disconnect();
+		super.onStop();
 	}
 
 	class MyPagerAdapter extends FragmentPagerAdapter {
@@ -246,9 +290,116 @@ public class LaunchActivity extends AppCompatActivity implements
 			Intent i = new Intent(this, HomeActivity.class);
 			startActivity(i);
 			break;
+		case R.id.google_sign_in_button:
+			onGoogleSignInClicked();
+			break;
 
 		default:
 			break;
 		}
+	}
+
+	private void onGoogleSignInClicked() {
+		mShouldResolve = true;
+		mGoogleApiClient.connect();
+
+		// Show a message to the user that we are signing in.
+		// mStatusTextView.setText(R.string.signing_in);
+	}
+
+	private void initialiseGoogleApiClient() {
+		mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this).addApi(Plus.API)
+				.addScope(new Scope(Scopes.PROFILE)).build();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.d("google login", "onActivityResult:" + requestCode + ":"
+				+ resultCode + ":" + data);
+		if (requestCode == RC_SIGN_IN) {
+			if (resultCode != RESULT_OK) {
+				mShouldResolve = false;
+			}
+
+			mIsResolving = false;
+			mGoogleApiClient.connect();
+		}
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+		Log.d("google login",
+				"onConnectionFailed:" + connectionResult.describeContents()
+						+ connectionResult);
+		if (!mIsResolving && mShouldResolve) {
+			if (connectionResult.hasResolution()) {
+				try {
+					connectionResult.startResolutionForResult(this, RC_SIGN_IN);
+					mIsResolving = true;
+				} catch (IntentSender.SendIntentException e) {
+					Log.e("google login",
+							"Could not resolve ConnectionResult.", e);
+					mIsResolving = false;
+					mGoogleApiClient.connect();
+				}
+			} else {
+				// Could not resolve the connection result, show the user an
+				// error dialog.
+				// showErrorDialog(connectionResult);
+				Toast.makeText(this, "Login error...Please try again",
+						Toast.LENGTH_SHORT).show();
+			}
+		} else {
+			// Show the signed-out UI
+			// showSignedOutUI();
+		}
+	}
+
+	@Override
+	public void onConnected(Bundle bundle) {
+		Log.d("google login", "onConnected:" + bundle);
+		mShouldResolve = false;
+
+		// Show the signed-in UI
+		// showSignedInUI();
+
+		Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(
+				this);
+
+		if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+			Person currentPerson = Plus.PeopleApi
+					.getCurrentPerson(mGoogleApiClient);
+			String personName = currentPerson.getDisplayName();
+			String personPhoto = currentPerson.getImage().getUrl();
+			String personGooglePlusProfile = currentPerson.getUrl();
+			String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+			Log.w("as", personName + personPhoto + currentPerson
+					+ personGooglePlusProfile + " - " + email);
+		} else {
+			Log.w("as", "null");
+		}
+
+		onGoogleSignOutClicked();
+	}
+
+	private void onGoogleSignOutClicked() {
+		if (mGoogleApiClient.isConnected()) {
+			Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+			mGoogleApiClient.disconnect();
+		}
+		// showSignedOutUI();
+	}
+
+	@Override
+	public void onConnectionSuspended(int arg0) {
+
+	}
+
+	@Override
+	public void onResult(LoadPeopleResult arg0) {
+
 	}
 }

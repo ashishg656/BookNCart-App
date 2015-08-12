@@ -4,6 +4,7 @@
     <color name="PrimaryColor">#4490c7</color>
     <color name="PrimaryDarkColor">#0097a7</color>
     <color name="bnc_white">#ffffff</color>
+    <color name="bnc_white_transparency">#80ffffff</color>
     <color name="psts_background_tab_pressed">#1AFFFFFF</color>
     <color name="bnc_black">#000000</color>
     <color name="bnc_black_with_40_alpha">#66000000</color>
@@ -21,6 +22,7 @@
     <color name="bnc_grey_shade_8">#424242</color>
     <color name="bnc_grey_shade_9">#212121</color>
     <color name="bnc_text_color_dark">#212121</color>
+    <color name="bnc_text_color_medium_dark">@color/bnc_grey_shade_8</color>
     <color name="bnc_text_color_light">@color/bnc_grey_shade_6</color>
     <color name="bnc_progress_layout_light_circle">#ffebee</color>
     <color name="bnc_progress_layout_dark_circle">#ffcdd2</color>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.bookncart.app"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager_shopandcart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <android.support.v7.widget.Toolbar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center_vertical"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="3dp"
+                android:text="BookNCart"
+                android:textColor="@color/bnc_white"
+                android:textSize="22sp" />
+        </android.support.v7.widget.Toolbar>
+
+        <com.bookncart.app.widgets.PagerSlidingTabStrip
+            android:id="@+id/tabstripcartwishlist"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bnc_button_height"
+            android:background="@color/PrimaryColor"
+            app:pstsIndicatorColor="@color/bnc_white"
+            app:pstsIndicatorHeight="2dp"
+            app:pstsShouldExpand="true"
+            app:pstsTextAllCaps="true"
+            app:pstsTextColorSelected="@color/bnc_white" >
+        </com.bookncart.app.widgets.PagerSlidingTabStrip>
+    </android.support.design.widget.AppBarLayout>
+
+</FrameLayout>
