@@ -56,6 +56,11 @@
             android:label="@string/app_name"
             android:theme="@style/BNCNoActionBar" >
         </activity>
+        <activity
+            android:name="com.bookncart.app.activities.BookDetailActivity"
+            android:label="@string/app_name"
+            android:theme="@style/BNCNoActionBar" >
+        </activity>
     </application>
 
 </manifest>

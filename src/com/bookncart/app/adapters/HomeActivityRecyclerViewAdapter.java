@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -25,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bookncart.app.R;
+import com.bookncart.app.activities.BookDetailActivity;
 import com.bookncart.app.activities.HomeActivity;
 import com.bookncart.app.activities.ShopActivity;
 import com.bookncart.app.activities.ShopByCategoriesActivity;
@@ -365,6 +365,7 @@ public class HomeActivityRecyclerViewAdapter extends
 			holder.mainContainer.setTag(R.integer.bnc_home_tag_type, bookType);
 			holder.mainContainer.setOnDragListener(myDragListener);
 			holder.mainContainer.setOnLongClickListener(myLongClickListener);
+			holder.mainContainer.setOnClickListener(onClickListener);
 		}
 
 		@Override
@@ -486,6 +487,10 @@ public class HomeActivityRecyclerViewAdapter extends
 					break;
 				}
 				intent.putExtra("actionbarname", actionBarTitle);
+				context.startActivity(intent);
+				break;
+			case R.id.main_layout_top_rated:
+				intent = new Intent(context, BookDetailActivity.class);
 				context.startActivity(intent);
 				break;
 			default:

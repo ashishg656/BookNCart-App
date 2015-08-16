@@ -11,6 +11,7 @@
     <dimen name="bnc_font_small">16sp</dimen>
     <dimen name="bnc_font_medium">18sp</dimen>
     <dimen name="bnc_button_height">48dp</dimen>
+    <dimen name="bnc_toolbar_height">56dp</dimen>
     <dimen name="bnc_launch_app_icon_margin">210dp</dimen>
     <dimen name="bnc_drawer_header_top_padding">56dp</dimen>
     <dimen name="bnc_drawer_profile_image_height">64dp</dimen>
@@ -36,5 +37,8 @@
     <!-- Cart Fragment -->
     <dimen name="bnc_cart_list_image_height">110dp</dimen>
     <dimen name="bnc_cart_list_image_width">100dp</dimen>
+
+    <!-- Book detail activity -->
+    <dimen name="bnc_book_detail_image_height">200dp</dimen>
 
 </resources>

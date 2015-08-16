@@ -2,12 +2,168 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp"
     android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="@dimen/bnc_margin_large"
+        android:background="@drawable/rounded_corner_linear_layout_stroke_bg"
+        android:gravity="center"
+        android:padding="10dp" >
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_favourite_gray" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/bnc_margin_mini"
+            android:layout_marginRight="@dimen/bnc_margin_mini"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Add More From Wishlist"
+            android:textColor="@color/bnc_text_color_medium_dark"
+            android:textSize="@dimen/bnc_font_supermini" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_hardware_right" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="footer"
-        android:textColor="#000000" />
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/bnc_margin_large"
+        android:text="Order Summary"
+        android:textColor="@color/bnc_green_color_primary"
+        android:textSize="@dimen/bnc_font_mini" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/bnc_margin_small"
+        android:background="@drawable/shadow_bg_shop"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bnc_margin_small"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total Quantity"
+                android:textColor="@color/bnc_text_color_light"
+                android:textSize="@dimen/bnc_font_mini"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="14"
+                android:textColor="@color/bnc_text_color_medium_dark"
+                android:textSize="@dimen/bnc_font_small"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bnc_margin_small"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cart Total"
+                android:textColor="@color/bnc_text_color_light"
+                android:textSize="@dimen/bnc_font_mini"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹ 550"
+                android:textColor="@color/bnc_text_color_medium_dark"
+                android:textSize="@dimen/bnc_font_small"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bnc_margin_small"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Delivery Charges"
+                android:textColor="@color/bnc_text_color_light"
+                android:textSize="@dimen/bnc_font_mini"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹ 50"
+                android:textColor="@color/bnc_green_color_primary"
+                android:textSize="@dimen/bnc_font_small"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bnc_margin_small"
+            android:layout_marginTop="@dimen/bnc_margin_large"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total Amount"
+                android:textColor="@color/bnc_text_color_medium_dark"
+                android:textSize="@dimen/bnc_font_small"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹ 550"
+                android:textColor="@color/PrimaryColor"
+                android:textSize="@dimen/bnc_font_medium"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="@dimen/bnc_margin_medium"
+        android:background="@drawable/rounded_corner_linear_layout_stroke_bg"
+        android:gravity="center"
+        android:padding="@dimen/bnc_margin_medium"
+        android:text="PLACE ORDER"
+        android:textColor="@color/bnc_green_color_primary"
+        android:textSize="@dimen/bnc_font_small" />
 
 </LinearLayout>

@@ -1,11 +1,14 @@
 package com.bookncart.app.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -15,7 +18,9 @@ import com.bookncart.app.fragments.CartFragment;
 import com.bookncart.app.fragments.WishlistFragment;
 import com.bookncart.app.widgets.PagerSlidingTabStrip;
 
-public class WishlistAndCartActivity extends AppCompatActivity {
+@SuppressLint("NewApi")
+public class WishlistAndCartActivity extends AppCompatActivity implements
+		OnPageChangeListener {
 
 	ViewPager viewPager;
 	PagerSlidingTabStrip pagerSlidingTabStrip;
@@ -23,6 +28,7 @@ public class WishlistAndCartActivity extends AppCompatActivity {
 	int toolbarHeight;
 	MyPagerAdapter adapter;
 	AppBarLayout appBarLayout;
+	FloatingActionButton floatingActionButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,7 @@ public class WishlistAndCartActivity extends AppCompatActivity {
 		appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
 		viewPager = (ViewPager) findViewById(R.id.pager_shopandcart);
 		pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabstripcartwishlist);
+		floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_cart);
 
 		toolbar.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
@@ -57,10 +64,14 @@ public class WishlistAndCartActivity extends AppCompatActivity {
 
 		try {
 			if (getIntent().getExtras().getBoolean("wishlist")) {
+				floatingActionButton.setTranslationY(getResources()
+						.getDimensionPixelSize(R.dimen.bnc_button_height));
 				viewPager.setCurrentItem(1);
 			}
 		} catch (Exception e) {
 		}
+
+		pagerSlidingTabStrip.setOnPageChangeListener(this);
 	}
 
 	class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -90,5 +101,41 @@ public class WishlistAndCartActivity extends AppCompatActivity {
 		public CharSequence getPageTitle(int position) {
 			return names[position];
 		}
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+		if (state == ViewPager.SCROLL_STATE_IDLE) {
+			if (viewPager.getCurrentItem() == 1) {
+				floatingActionButton
+						.animate()
+						.translationY(
+								getResources().getDimensionPixelSize(
+										R.dimen.bnc_button_height))
+						.setDuration(200).start();
+			} else {
+				floatingActionButton.animate().translationY(0).setDuration(200)
+						.start();
+			}
+		} else {
+			floatingActionButton
+					.animate()
+					.translationY(
+							getResources().getDimensionPixelSize(
+									R.dimen.bnc_button_height))
+					.setDuration(200).start();
+		}
+	}
+
+	@SuppressLint("NewApi")
+	@Override
+	public void onPageScrolled(int pos, float positionOffset, int arg2) {
+
+	}
+
+	@SuppressLint("NewApi")
+	@Override
+	public void onPageSelected(int pos) {
+
 	}
 }

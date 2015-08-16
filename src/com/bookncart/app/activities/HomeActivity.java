@@ -186,6 +186,8 @@ public class HomeActivity extends AppCompatActivity implements OnDragListener {
 				super.onScrollStateChanged(recyclerView, newState);
 			}
 		});
+
+		getCurrentVersionNo();
 	}
 
 	private void addData() {
