@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadow_bg_sqaure"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/bnc_margin_mini" >
+
+            <com.bookncart.app.widgets.CircularImageView
+                android:id="@+id/userImage"
+                android:layout_width="@dimen/bnc_review_item_user_img_radius"
+                android:layout_height="@dimen/bnc_review_item_user_img_radius"
+                android:src="@drawable/app_logo_image" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/bnc_margin_mini"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/bnc_margin_small"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="User name here"
+                        android:textColor="@color/PrimaryDarkColor"
+                        android:textSize="@dimen/bnc_font_mini" />
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginRight="@dimen/bnc_margin_mini"
+                        android:src="@drawable/ic_clock" />
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:text="16 aug 2015"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <RatingBar
+                    android:id="@+id/rating"
+                    style="@style/customRatingBarMini"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/bnc_margin_mini"
+                    android:isIndicator="true"
+                    android:max="5"
+                    android:numStars="5"
+                    android:stepSize="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/bnc_button_height"
+            android:layout_marginRight="@dimen/bnc_margin_medium"
+            android:background="@color/bnc_grey_shade_2" />
+
+        <TextView
+            android:id="@+id/review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/bnc_margin_medium"
+            android:text="@string/bnc_lorel_ipsum"
+            android:textColor="@color/bnc_grey_shade_7"
+            android:textSize="@dimen/bnc_font_supermini" />
+    </LinearLayout>
+
+</FrameLayout>

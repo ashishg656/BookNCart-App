@@ -9,6 +9,8 @@
         android:id="@+id/topratedmorebookslayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/bnc_margin_mini"
         android:paddingTop="@dimen/bnc_margin_mini" >
@@ -33,13 +35,29 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <com.bookncart.app.widgets.RecyclerViewHorizontalScrolling
-        android:id="@+id/home_recycler_view_toprated"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bnc_home_recent_viewpager_height"
-        android:clipToPadding="false"
-        android:paddingLeft="@dimen/bnc_margin_mini"
-        android:paddingRight="@dimen/bnc_margin_mini"
-        android:scrollbars="none" />
+        android:layout_height="wrap_content" >
+
+        <com.bookncart.app.widgets.RecyclerViewHorizontalScrolling
+            android:id="@+id/home_recycler_view_toprated"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bnc_home_recent_viewpager_height"
+            android:clipToPadding="false"
+            android:paddingLeft="@dimen/bnc_margin_mini"
+            android:paddingRight="@dimen/bnc_margin_mini"
+            android:scrollbars="none" />
+
+        <TextView
+            android:id="@+id/nullcasetextrecentlyviewed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/bnc_margin_large"
+            android:text="@string/bnc_recently_viewed_books_null_case_text"
+            android:textColor="@color/bnc_text_color_dark"
+            android:textSize="@dimen/bnc_font_small"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>

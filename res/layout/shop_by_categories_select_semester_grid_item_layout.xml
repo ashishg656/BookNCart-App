@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_select_semester"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/bnc_margin_mini"
+    android:background="@drawable/z_user_profile_article_bg_selector"
+    android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/bnc_margin_mini" >
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/imgae_selct_semester"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/semester1" />
 
     <TextView
+        android:id="@+id/name_selct_semester"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Semester 1"

@@ -44,20 +44,27 @@
             app:pstsIndicatorColor="@color/bnc_white"
             app:pstsIndicatorHeight="2dp"
             app:pstsShouldExpand="true"
+            app:pstsTabBackground="?attr/selectableItemBackground"
             app:pstsTextAllCaps="true"
             app:pstsTextColorSelected="@color/bnc_white" >
         </com.bookncart.app.widgets.PagerSlidingTabStrip>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_margin="@dimen/bnc_margin_small"
-        android:padding="@dimen/bnc_margin_small"
-        android:src="@drawable/ic_hardware_right_white"
-        app:backgroundTint="@color/PrimaryColor"
-        app:fabSize="mini" />
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/cordinatorwishlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_margin="@dimen/bnc_margin_small"
+            android:padding="@dimen/bnc_margin_small"
+            android:src="@drawable/ic_hardware_right_white"
+            app:backgroundTint="@color/PrimaryColor"
+            app:fabSize="mini" />
+    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>

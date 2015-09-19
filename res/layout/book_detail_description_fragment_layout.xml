@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bnc_white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/toolbarfakereviewfrag"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/PrimaryColor"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/backbuttonfake2"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/z_user_profile_article_bg_selector"
+            android:clickable="true"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/ic_navigation_arrow_back_white" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/numberoferviews"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:text="Book name here"
+            android:textColor="@color/bnc_white" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/bnc_margin_large" >
+
+            <TextView
+                android:id="@+id/description_book_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:paddingBottom="@dimen/bnc_margin_large"
+                android:paddingLeft="@dimen/bnc_margin_large"
+                android:paddingRight="@dimen/bnc_margin_large"
+                android:paddingTop="@dimen/bnc_margin_large"
+                android:text="@string/bnc_sample_long_book_description"
+                android:textColor="@color/bnc_text_color_medium_dark"
+                android:textSize="@dimen/bnc_font_mini" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bnc_grey_shade_3" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Author"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/author"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Publisher"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/Publisher"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ISBN"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/isbn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="MRP"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/mrp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Price"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Condition"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/conditiom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Binding"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/Binding"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Edition"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/Edition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Language"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/Language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No. of Pages"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/numberofpages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Publication Year"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_supermini" />
+
+                    <TextView
+                        android:id="@+id/publicationyear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Content for above heading here"
+                        android:textColor="@color/bnc_text_color_dark"
+                        android:textSize="@dimen/bnc_font_supermini" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/bnc_margin_large" >
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

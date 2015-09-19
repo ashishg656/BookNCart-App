@@ -11,6 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bookncart.app.R;
+import com.bookncart.app.application.ZApplication;
+import com.bookncart.app.serverApi.ImageRequestManager;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
@@ -24,7 +26,7 @@ public class KenBurnsSupportView extends FrameLayout {
 	private static final String TAG = "KenBurnsView";
 
 	private final Handler mHandler;
-	private int[] mResourceIds;
+	private String[] mResourceIds;
 	private ImageView[] mImageViews;
 	private int mActiveImageIndex = -1;
 
@@ -56,7 +58,7 @@ public class KenBurnsSupportView extends FrameLayout {
 		mHandler = new Handler();
 	}
 
-	public void setResourceIds(int... resourceIds) {
+	public void setResourceIds(String... resourceIds) {
 		mResourceIds = resourceIds;
 		fillImageViews();
 	}
@@ -151,7 +153,12 @@ public class KenBurnsSupportView extends FrameLayout {
 
 	private void fillImageViews() {
 		for (int i = 0; i < mImageViews.length; i++) {
-			mImageViews[i].setImageResource(mResourceIds[i]);
+			ImageRequestManager.get(getContext())
+					.requestImage(
+							getContext(),
+							mImageViews[i],
+							ZApplication.getInstance().getImageUrl(
+									mResourceIds[i]), -1);
 		}
 	}
 }

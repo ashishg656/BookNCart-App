@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.bookncart.app"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bnc_black_with_40_alpha"
+    android:clickable="true"
+    android:gravity="center" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/bnc_margin_small"
+        android:layout_marginRight="@dimen/bnc_margin_small"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/bnc_write_review_user_image_height_helf"
+            android:background="@color/bnc_white"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/bnc_green_color_primary" >
+            </FrameLayout>
+
+            <RatingBar
+                android:id="@+id/ratingbar"
+                style="@style/customRatingBarLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/bnc_margin_small"
+                android:layout_marginTop="@dimen/bnc_margin_large"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:stepSize="1" />
+
+            <TextView
+                android:id="@+id/ratingtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/bnc_margin_small"
+                android:text="Rating out of 5"
+                android:textColor="@color/bnc_green_color_primary" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <EditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/bnc_margin_small"
+                        android:gravity="start"
+                        android:hint="Name"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:textColor="@color/bnc_text_color_medium_dark"
+                        android:textColorHint="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_mini" />
+
+                    <EditText
+                        android:id="@+id/email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/bnc_margin_small"
+                        android:gravity="start"
+                        android:hint="Email ID"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/bnc_text_color_medium_dark"
+                        android:textColorHint="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_mini" />
+
+                    <EditText
+                        android:id="@+id/review"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/bnc_margin_small"
+                        android:gravity="start"
+                        android:hint="Review"
+                        android:imeOptions="actionDone"
+                        android:lines="2"
+                        android:textColor="@color/bnc_text_color_medium_dark"
+                        android:textColorHint="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_mini" />
+                </LinearLayout>
+            </ScrollView>
+
+            <TextView
+                android:id="@+id/submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="@dimen/bnc_margin_mini"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="@dimen/bnc_margin_small"
+                android:text="SUBMIT"
+                android:textColor="@color/bnc_green_pressed"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <com.bookncart.app.widgets.CircularImageView
+            android:layout_width="@dimen/bnc_write_review_user_image_height"
+            android:layout_height="@dimen/bnc_write_review_user_image_height"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/app_logo_image"
+            app:border="true"
+            app:border_color="@color/bnc_white"
+            app:border_width="2dp" />
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+android:id/background"
+        android:drawable="@drawable/bnc_rating_bar_star_blank_large"/>
+    <item
+        android:id="@+android:id/secondaryProgress"
+        android:drawable="@drawable/bnc_rating_bar_star_blank_large"/>
+    <item
+        android:id="@+android:id/progress"
+        android:drawable="@drawable/bnc_rating_bar_star_filled_large"/>
+
+</layer-list>

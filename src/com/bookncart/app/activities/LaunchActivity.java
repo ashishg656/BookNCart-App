@@ -1,25 +1,39 @@
 package com.bookncart.app.activities;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import android.accounts.Account;
 import android.animation.ArgbEvaluator;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,12 +43,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bookncart.app.R;
+import com.bookncart.app.application.ZApplication;
+import com.bookncart.app.baseobjects.LoginObject;
+import com.bookncart.app.extras.ZRequestTags;
 import com.bookncart.app.fragments.LaunchScreen1Fragment;
 import com.bookncart.app.fragments.LaunchScreen4Fragment;
+import com.bookncart.app.gcm.RegistrationIntentService;
+import com.bookncart.app.preferences.ZPreferences;
+import com.bookncart.app.serverApi.UploadManager;
+import com.bookncart.app.serverApi.UploadManagerCallback;
+import com.bookncart.app.utils.CommonLib;
+import com.bookncart.app.utils.JSONUtils;
 import com.bookncart.app.widgets.CirclePageIndicator;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
@@ -43,11 +78,11 @@ import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
 @SuppressLint("NewApi")
-public class LaunchActivity extends AppCompatActivity implements
+public class LaunchActivity extends BaseActivity implements
 		OnPageChangeListener, OnClickListener,
 		GoogleApiClient.ConnectionCallbacks,
 		GoogleApiClient.OnConnectionFailedListener,
-		ResultCallback<LoadPeopleResult> {
+		ResultCallback<LoadPeopleResult>, UploadManagerCallback, ZRequestTags {
 
 	ViewPager viewPager;
 	ArgbEvaluator argbEvaluator;
@@ -62,7 +97,8 @@ public class LaunchActivity extends AppCompatActivity implements
 	int loginButtonsLayoutHeight, skipButtonHeight;
 	RelativeLayout skipButtonLayout;
 	TextView skipButton;
-	SignInButton googleLoginButton;
+	Button googleLoginButton, facebookLoginButton;
+	ProgressDialog progressDialog;
 
 	// GOOGLE API
 	/* Request code used to invoke sign in user interactions. */
@@ -75,10 +111,40 @@ public class LaunchActivity extends AppCompatActivity implements
 	private boolean mShouldResolve = false;
 	private static final int PROFILE_PIC_SIZE = 400;
 
+	// FACEBOOK
+	CallbackManager callbackManager;
+
+	// DATA TO SEND
+	String emailToSend, idToSend, imageUrlToSend, nameToSend,
+			accessTokenToSend, additionalDataToSend;
+	boolean isGoogleAccountToSend;
+
+	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+	private BroadcastReceiver mRegistrationBroadcastReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		FacebookSdk.sdkInitialize(getApplicationContext());
+
 		setContentView(R.layout.launch_activity_layout);
+
+		mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				if (!ZPreferences.isGcmRegistered(LaunchActivity.this)) {
+					Toast.makeText(LaunchActivity.this,
+							"Please enable internet connection",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		};
+
+		if (!checkPlayServices())
+			return;
+
+		Intent intent = new Intent(this, RegistrationIntentService.class);
+		startService(intent);
 
 		viewPager = (ViewPager) findViewById(R.id.pager_launch);
 		skipButton = (TextView) findViewById(R.id.launch_skip_text);
@@ -90,7 +156,13 @@ public class LaunchActivity extends AppCompatActivity implements
 		loginButtonsContainerLayout = (LinearLayout) findViewById(R.id.indicatorandbuttonslayout);
 		loginButtonsLayout = (LinearLayout) findViewById(R.id.login_buttons);
 		skipButtonLayout = (RelativeLayout) findViewById(R.id.skipbuttonlayout);
-		googleLoginButton = (SignInButton) findViewById(R.id.google_sign_in_button);
+		googleLoginButton = (Button) findViewById(R.id.google_sign_in_button);
+		facebookLoginButton = (Button) findViewById(R.id.facebook_login_button);
+
+		facebookLoginButton.setOnClickListener(this);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.dismiss();
 
 		try {
 			Field mScroller = ViewPager.class.getDeclaredField("mScroller");
@@ -149,13 +221,173 @@ public class LaunchActivity extends AppCompatActivity implements
 		skipButton.setOnClickListener(this);
 		googleLoginButton.setOnClickListener(this);
 
+		ZPreferences.setIsUserLogin(this, false);
+
 		initialiseGoogleApiClient();
+
+		callbackManager = CallbackManager.Factory.create();
+
+		LoginManager.getInstance().registerCallback(callbackManager,
+				new FacebookCallback<LoginResult>() {
+
+					@Override
+					public void onSuccess(LoginResult result) {
+						Log.w("facebook", "success " + result);
+						if (progressDialog != null)
+							progressDialog.dismiss();
+						if (AccessToken.getCurrentAccessToken()
+								.getPermissions().contains("email")) {
+							getFacebookUserDetails(result.getAccessToken());
+						} else {
+							Toast.makeText(LaunchActivity.this,
+									"Please allow email permission",
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+
+					@Override
+					public void onError(FacebookException error) {
+						Log.w("facebook", "error");
+						if (progressDialog != null)
+							progressDialog.dismiss();
+						Toast.makeText(LaunchActivity.this, error.getMessage(),
+								Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onCancel() {
+						Log.w("facebook", "cancel");
+						if (progressDialog != null)
+							progressDialog.dismiss();
+					}
+				});
+
+		UploadManager.getInstance().addCallback(this, this);
+	}
+
+	private boolean checkPlayServices() {
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(this);
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+				GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+						PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			} else {
+				Toast.makeText(
+						this,
+						"This device doesn't support Play services, App will not work normally",
+						Toast.LENGTH_LONG).show();
+				finish();
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private void getFacebookUserDetails(final AccessToken accessToken) {
+		GraphRequest request = GraphRequest.newMeRequest(accessToken,
+				new GraphRequest.GraphJSONObjectCallback() {
+					@Override
+					public void onCompleted(JSONObject object,
+							GraphResponse response) {
+						System.out.println(object);
+						if (progressDialog != null)
+							progressDialog.dismiss();
+						idToSend = JSONUtils.getStringfromJSON(object, "id");
+						nameToSend = JSONUtils
+								.getStringfromJSON(object, "name");
+						emailToSend = JSONUtils.getStringfromJSON(object,
+								"email");
+
+						JSONObject temp1 = JSONUtils.getJSONObject(object,
+								"picture");
+						JSONObject temp2 = JSONUtils.getJSONObject(temp1,
+								"data");
+						imageUrlToSend = JSONUtils.getStringfromJSON(temp2,
+								"url");
+
+						accessTokenToSend = accessToken.getToken();
+
+						additionalDataToSend = object.toString()
+								+ " ---  and  --  " + response.toString();
+
+						isGoogleAccountToSend = false;
+
+						makeLoginRequestToServer();
+					}
+				});
+
+		progressDialog = ProgressDialog.show(this, null,
+				"Verifying info. Please wait..");
+		Bundle parameters = new Bundle();
+		parameters.putString("fields",
+				"id,name,link,email,friends,picture.height(721)");
+		request.setParameters(parameters);
+		request.executeAsync();
+	}
+
+	@SuppressWarnings("deprecation")
+	protected void makeLoginRequestToServer() {
+		if (ZPreferences.isGcmRegistered(this)) {
+			String url = ZApplication.getInstance().getBaseUrl()
+					+ "login_request/";
+			List<NameValuePair> nameValuePairs = new ArrayList<>();
+			nameValuePairs.add(new BasicNameValuePair("access_token",
+					accessTokenToSend));
+			nameValuePairs.add(new BasicNameValuePair("user_id", idToSend));
+			nameValuePairs.add(new BasicNameValuePair("additional_data",
+					additionalDataToSend));
+			nameValuePairs.add(new BasicNameValuePair("email", emailToSend));
+			nameValuePairs.add(new BasicNameValuePair("name", nameToSend));
+			nameValuePairs.add(new BasicNameValuePair("image_url",
+					imageUrlToSend));
+			nameValuePairs.add(new BasicNameValuePair("is_google_login",
+					Boolean.toString(isGoogleAccountToSend)));
+			nameValuePairs.add(new BasicNameValuePair("device_id", ZPreferences
+					.getDeviceID(this)));
+			nameValuePairs.add(new BasicNameValuePair("gcm_token", ZPreferences
+					.getGcmToken(this)));
+			UploadManager.getInstance().makeAyncRequest(url,
+					BNC_LOGIN_REQUEST_TAG, BNC_LOGIN_REQUEST_TAG,
+					BNC_LOGIN_REQUEST_TAG, null, nameValuePairs, null);
+		} else {
+			Intent intent = new Intent(this, RegistrationIntentService.class);
+			startService(intent);
+			Toast.makeText(
+					this,
+					"GCM Registration not available.Check internet connection and login again",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
 	protected void onStart() {
 		mGoogleApiClient.connect();
 		super.onStart();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AppEventsLogger.activateApp(this);
+		checkPlayServices();
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+				mRegistrationBroadcastReceiver,
+				new IntentFilter(CommonLib.GCM_TAG));
+	}
+
+	@Override
+	protected void onDestroy() {
+		UploadManager.getInstance().removeCallback(this);
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		AppEventsLogger.deactivateApp(this);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(
+				mRegistrationBroadcastReceiver);
 	}
 
 	@Override
@@ -288,10 +520,18 @@ public class LaunchActivity extends AppCompatActivity implements
 		switch (v.getId()) {
 		case R.id.launch_skip_text:
 			Intent i = new Intent(this, HomeActivity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
 			break;
 		case R.id.google_sign_in_button:
 			onGoogleSignInClicked();
+			break;
+		case R.id.facebook_login_button:
+			LoginManager.getInstance().logInWithReadPermissions(this,
+					Arrays.asList("public_profile", "email"));
+			progressDialog = ProgressDialog.show(this, null,
+					"Retrieving facebook info. Please Wait..");
 			break;
 
 		default:
@@ -305,6 +545,8 @@ public class LaunchActivity extends AppCompatActivity implements
 
 		// Show a message to the user that we are signing in.
 		// mStatusTextView.setText(R.string.signing_in);
+		progressDialog = ProgressDialog.show(this, "Google Login",
+				"Getting Google login details. Please wait..", true, false);
 	}
 
 	private void initialiseGoogleApiClient() {
@@ -317,15 +559,23 @@ public class LaunchActivity extends AppCompatActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.d("google login", "onActivityResult:" + requestCode + ":"
-				+ resultCode + ":" + data);
 		if (requestCode == RC_SIGN_IN) {
 			if (resultCode != RESULT_OK) {
 				mShouldResolve = false;
+				if (progressDialog != null)
+					progressDialog.dismiss();
 			}
 
 			mIsResolving = false;
 			mGoogleApiClient.connect();
+			if (!progressDialog.isShowing())
+				progressDialog = ProgressDialog
+						.show(this, "Google Login",
+								"Logging in through Google..Please Wait..",
+								true, false);
+		} else {
+			// facebook login
+			callbackManager.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -337,11 +587,13 @@ public class LaunchActivity extends AppCompatActivity implements
 		if (!mIsResolving && mShouldResolve) {
 			if (connectionResult.hasResolution()) {
 				try {
+					if (progressDialog != null)
+						progressDialog.dismiss();
 					connectionResult.startResolutionForResult(this, RC_SIGN_IN);
 					mIsResolving = true;
 				} catch (IntentSender.SendIntentException e) {
-					Log.e("google login",
-							"Could not resolve ConnectionResult.", e);
+					progressDialog = ProgressDialog.show(this, null,
+							"Getting user account details");
 					mIsResolving = false;
 					mGoogleApiClient.connect();
 				}
@@ -349,12 +601,15 @@ public class LaunchActivity extends AppCompatActivity implements
 				// Could not resolve the connection result, show the user an
 				// error dialog.
 				// showErrorDialog(connectionResult);
-				Toast.makeText(this, "Login error...Please try again",
+				Toast.makeText(
+						this,
+						"Login error...Please try again "
+								+ connectionResult.describeContents(),
 						Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			// Show the signed-out UI
-			// showSignedOutUI();
+			if (progressDialog != null)
+				progressDialog.dismiss();
 		}
 	}
 
@@ -366,6 +621,13 @@ public class LaunchActivity extends AppCompatActivity implements
 		// Show the signed-in UI
 		// showSignedInUI();
 
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+		if (progressDialog != null && !progressDialog.isShowing())
+			progressDialog = ProgressDialog.show(this, null,
+					"Getting user details.Please wait..");
+
 		Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(
 				this);
 
@@ -376,13 +638,27 @@ public class LaunchActivity extends AppCompatActivity implements
 			String personPhoto = currentPerson.getImage().getUrl();
 			String personGooglePlusProfile = currentPerson.getUrl();
 			String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+			String id = currentPerson.getId();
+
+			personPhoto = personPhoto.substring(0, personPhoto.length() - 2)
+					+ PROFILE_PIC_SIZE;
+
 			Log.w("as", personName + personPhoto + currentPerson
 					+ personGooglePlusProfile + " - " + email);
+
+			nameToSend = personName;
+			imageUrlToSend = personPhoto;
+			emailToSend = email;
+			idToSend = id;
+			additionalDataToSend = currentPerson
+					+ "  ---   profile url   --   " + personGooglePlusProfile;
+			isGoogleAccountToSend = true;
 		} else {
 			Log.w("as", "null");
 		}
 
-		onGoogleSignOutClicked();
+		GetGoogleIdTokenTask task = new GetGoogleIdTokenTask();
+		task.execute();
 	}
 
 	private void onGoogleSignOutClicked() {
@@ -401,5 +677,101 @@ public class LaunchActivity extends AppCompatActivity implements
 	@Override
 	public void onResult(LoadPeopleResult arg0) {
 
+	}
+
+	private class GetGoogleIdTokenTask extends AsyncTask<Void, Void, String> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+			progressDialog = ProgressDialog.show(LaunchActivity.this, null,
+					"Getting Google Plus Access Token");
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			String accountName = Plus.AccountApi
+					.getAccountName(mGoogleApiClient);
+			Account account = new Account(accountName,
+					GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+			String scopes = "audience:server:client_id:"
+					+ "509487250429-pekgqlshg58mfqm6adctmvm3ul9nlbjr.apps.googleusercontent.com";
+			try {
+				return GoogleAuthUtil.getToken(getApplicationContext(),
+						account, scopes);
+			} catch (IOException e) {
+				Log.e("google", "Error retrieving ID token.", e);
+				return null;
+			} catch (GoogleAuthException e) {
+				Log.e("google", "Error retrieving ID token.", e);
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			Log.i("google", "ID token: " + result);
+			if (progressDialog != null)
+				progressDialog.dismiss();
+			if (result != null) {
+				Log.w("as", "Successfully retrieved ID Token " + result);
+				accessTokenToSend = result;
+				makeLoginRequestToServer();
+			} else {
+				Log.w("As", "There was some error getting the ID Token");
+			}
+		}
+	}
+
+	@Override
+	public void uploadFinished(int requestType, int objectId, Object data,
+			int uploadId, boolean status, int parserId) {
+		if (requestType == BNC_LOGIN_REQUEST_TAG) {
+			progressDialog.dismiss();
+			if (status) {
+				LoginObject obj = (LoginObject) data;
+				if (obj.isStatus()) {
+					Toast.makeText(this, "Logged in successfully ",
+							Toast.LENGTH_SHORT).show();
+
+					ZPreferences.setIsUserLogin(this, true);
+					ZPreferences.setUserID(this,
+							Integer.toString(obj.getUser_id()));
+					ZPreferences.setUserProfileID(this,
+							Integer.toString(obj.getUser_profile_id()));
+					ZPreferences.setUserImageURL(this, imageUrlToSend);
+					ZPreferences.setIsTutorialShown(this, false);
+					ZPreferences
+							.setIsGoogleAccount(this, isGoogleAccountToSend);
+					ZPreferences.setUserName(this, nameToSend);
+					ZPreferences.setUserEmail(this, emailToSend);
+
+					Intent intent = new Intent(this, HomeActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+							| Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(intent);
+					this.finish();
+				} else {
+					Toast.makeText(this, "Some server error occured",
+							Toast.LENGTH_SHORT).show();
+				}
+			} else {
+				Log.w("as", "fail");
+			}
+		}
+	}
+
+	@Override
+	public void uploadStarted(int requestType, int objectId, int parserId,
+			Object object) {
+		if (requestType == BNC_LOGIN_REQUEST_TAG) {
+			Log.w("as", "start");
+			progressDialog.dismiss();
+			progressDialog = ProgressDialog.show(this, "Welcome",
+					"Just a moment, logging in");
+		}
 	}
 }

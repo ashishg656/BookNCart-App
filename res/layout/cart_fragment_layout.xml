@@ -16,4 +16,8 @@
         android:paddingTop="108dp"
         android:scrollbars="none" />
 
+    <include layout="@layout/connection_error_layout" />
+
+    <include layout="@layout/progress_layout" />
+
 </FrameLayout>

@@ -18,106 +18,55 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/home_recycler_view"
+            <android.support.v4.widget.SwipeRefreshLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingBottom="@dimen/bnc_margin_small"
-                android:paddingTop="56dp"
-                android:scrollbars="none" />
+                android:layout_height="wrap_content" >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/home_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingBottom="@dimen/bnc_margin_small"
+                    android:paddingTop="56dp"
+                    android:scrollbars="none" />
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <include layout="@layout/toolbar_layout" />
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/buttons_layout"
+        <LinearLayout
+            android:id="@+id/cacheddatanotificatiin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/PrimaryColor"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/bnc_margin_small"
+                android:text="@string/viewing_cached_data"
+                android:textColor="@color/bnc_white"
+                android:textSize="@dimen/bnc_font_supermini" />
+        </LinearLayout>
+
+        <include layout="@layout/like_share_similar_buttons_layout" />
+
+        <include layout="@layout/similar_books_layout" />
+
+        <include layout="@layout/connection_error_layout" />
+
+        <include layout="@layout/progress_layout" />
+
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/cordinatorhome"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bnc_black_with_40_alpha" />
-
-            <ImageView
-                android:id="@+id/sharebutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bnc_share_button_bg_selector" />
-
-            <ImageView
-                android:id="@+id/similarbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bnc_similar_button_bg_selector" />
-
-            <ImageView
-                android:id="@+id/favouritebutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bnc_like_button_bg_selector" />
-
-            <ImageView
-                android:id="@+id/thumb_ind_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/thumb_indicator" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/similarbooklayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true" >
-
-            <ImageView
-                android:id="@+id/similarbookbgview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:src="#000000" />
-
-            <com.bookncart.app.widgets.TouchEventInterceptLinearLayout
-                android:id="@+id/linearlayoutsimilarbookslineartouch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bnc_white"
-                android:clickable="true"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/bnc_button_height"
-                    android:gravity="center_vertical" >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/bnc_margin_small"
-                        android:singleLine="true"
-                        android:text="Books similar to the name of the book here it is"
-                        android:textColor="@color/bnc_text_color_dark"
-                        android:textSize="@dimen/bnc_font_small" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/bnc_grey_shade_4" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/similarbooks_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
-                    android:clipToPadding="false"
-                    android:paddingBottom="@dimen/bnc_margin_small"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="2dp"
-                    android:paddingTop="2dp"
-                    android:scrollbars="none" />
-            </com.bookncart.app.widgets.TouchEventInterceptLinearLayout>
-        </FrameLayout>
+        </android.support.design.widget.CoordinatorLayout>
     </FrameLayout>
 
     <android.support.design.widget.NavigationView

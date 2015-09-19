@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent" >
+
+    <FrameLayout
+        android:id="@+id/contane"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/ecetcelrviewcontainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/bnc_white"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/toolbarfakereviewfrag"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/PrimaryColor"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:id="@+id/backbuttonfake2"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/z_user_profile_article_bg_selector"
+                    android:clickable="true"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:src="@drawable/ic_navigation_arrow_back_white" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/numberoferviews"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:includeFontPadding="false"
+                    android:text="10 reviews"
+                    android:textColor="@color/bnc_white" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/revirerecyclerF"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingBottom="@dimen/bnc_margin_mini"
+                    android:paddingTop="@dimen/bnc_margin_mini" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/writereviewbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/PrimaryColor"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/bnc_margin_medium" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Write a review..."
+                    android:textColor="@color/bnc_white"
+                    android:textSize="@dimen/bnc_font_supermini" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <include layout="@layout/connection_error_layout" />
+
+    <LinearLayout
+        android:id="@+id/loadinglayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bnc_white"
+        android:clickable="true"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,11 +1,13 @@
 package com.bookncart.app.adapters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -26,31 +28,38 @@ import android.widget.TextView;
 import com.bookncart.app.R;
 import com.bookncart.app.activities.BookDetailActivity;
 import com.bookncart.app.activities.HomeActivity;
+import com.bookncart.app.activities.RecentlyViewedBooksActivity;
 import com.bookncart.app.activities.ShopActivity;
 import com.bookncart.app.activities.ShopByCategoriesActivity;
+import com.bookncart.app.application.ZApplication;
+import com.bookncart.app.baseobjects.BookObject;
+import com.bookncart.app.baseobjects.HomeActivityRequest1Object;
+import com.bookncart.app.baseobjects.HomeActivityRequest2Object;
+import com.bookncart.app.baseobjects.TagObject;
 import com.bookncart.app.extras.AppConstants;
-import com.bookncart.app.objects.HomeActivityListObject;
-import com.bookncart.app.objects.HomeTopRatedBookObject;
-import com.bookncart.app.objects.RecentlyViewedBooksObject;
+import com.bookncart.app.serverApi.ImageRequestManager;
 import com.bookncart.app.widgets.CirclePageIndicator;
 import com.bookncart.app.widgets.CustomFlowLayout;
 import com.bookncart.app.widgets.RecyclerViewHorizontalScrolling;
+import com.bookncart.app.widgets.RoundedImageView;
 import com.bookncart.app.widgets.ViewPagerHorizontalScrolling;
 
 public class HomeActivityRecyclerViewAdapter extends
 		RecyclerView.Adapter<RecyclerView.ViewHolder> implements AppConstants {
 
 	Context context;
-	HomeActivityListObject mData;
 	MyOnClickListener onClickListener;
 	MyDragListener myDragListener;
 	MyLongClickListener myLongClickListener;
+	HomeActivityRequest1Object request1Object;
+	HomeActivityRequest2Object request2Object;
 
 	public HomeActivityRecyclerViewAdapter(Context context,
-			HomeActivityListObject mData) {
+			HomeActivityRequest1Object obj) {
 		super();
 		this.context = context;
-		this.mData = mData;
+		this.request1Object = obj;
+		this.request2Object = null;
 		onClickListener = new MyOnClickListener();
 		myLongClickListener = new MyLongClickListener();
 		myDragListener = new MyDragListener();
@@ -58,32 +67,55 @@ public class HomeActivityRecyclerViewAdapter extends
 
 	@Override
 	public int getItemViewType(int position) {
-		switch (position) {
-		case 0:
-			return BNC_HOME_LIST_TYPE_HEADER;
-		case 1:
-			return BNC_HOME_LIST_TYPE_CATEGORY;
-		case 2:
-			return BNC_HOME_LIST_TYPE_FEATURED;
-		case 3:
-			return BNC_HOME_LIST_TYPE_BEST_SELLING;
-		case 4:
-			return BNC_HOME_LIST_TYPE_NEW_ADDED;
-		case 5:
-			return BNC_HOME_LIST_TYPE_TOP_RATED;
-		case 6:
-			return BNC_HOME_LIST_TYPE_TAGS;
-		case 7:
-			return BNC_HOME_LIST_TYPE_CURRENTLY_ACTIVE;
-		case 8:
-			return BNC_HOME_LIST_TYPE_RECENTLY_VIEWED;
+		if (request2Object == null) {
+			switch (position) {
+			case 0:
+				return BNC_HOME_LIST_TYPE_HEADER;
+			case 1:
+				return BNC_HOME_LIST_TYPE_CATEGORY;
+			case 2:
+				return BNC_HOME_LIST_TYPE_FEATURED;
+			case 3:
+				return BNC_HOME_LIST_TYPE_BEST_SELLING;
+			case 4:
+				return BNC_HOME_LIST_TYPE_LOADING_FOOTER;
+			}
+		} else {
+			switch (position) {
+			case 0:
+				return BNC_HOME_LIST_TYPE_HEADER;
+			case 1:
+				return BNC_HOME_LIST_TYPE_CATEGORY;
+			case 2:
+				return BNC_HOME_LIST_TYPE_FEATURED;
+			case 3:
+				return BNC_HOME_LIST_TYPE_BEST_SELLING;
+			case 4:
+				return BNC_HOME_LIST_TYPE_NEW_ADDED;
+			case 5:
+				return BNC_HOME_LIST_TYPE_TOP_RATED;
+			case 6:
+				return BNC_HOME_LIST_TYPE_TAGS;
+			case 7:
+				return BNC_HOME_LIST_TYPE_CURRENTLY_ACTIVE;
+			case 8:
+				return BNC_HOME_LIST_TYPE_RECENTLY_VIEWED;
+			}
 		}
 		return 0;
 	}
 
 	@Override
 	public int getItemCount() {
-		return 9;
+		if (request2Object == null)
+			return 5;
+		else
+			return 9;
+	}
+
+	public void addDataObject2(HomeActivityRequest2Object obj) {
+		this.request2Object = obj;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -94,10 +126,53 @@ public class HomeActivityRecyclerViewAdapter extends
 			HeaderPagerAdapter adapter = new HeaderPagerAdapter();
 			holder.viewPagerHeader.setAdapter(adapter);
 			holder.pageIndicator.setViewPager(holder.viewPagerHeader);
+
+			holder.viewPagerHeader
+					.addOnPageChangeListener(new OnPageChangeListener() {
+
+						@Override
+						public void onPageSelected(int arg0) {
+						}
+
+						@Override
+						public void onPageScrolled(int arg0, float arg1,
+								int arg2) {
+						}
+
+						@Override
+						public void onPageScrollStateChanged(int state) {
+							((HomeActivity) context)
+									.enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
+						}
+					});
 		}
 			break;
 		case BNC_HOME_LIST_TYPE_CATEGORY: {
 			HomeActivityListCategoryViewHolder holder = (HomeActivityListCategoryViewHolder) commonHolder;
+			holder.categoryName1.setText(request1Object.getCategories().get(0)
+					.getName());
+			holder.categoryName2.setText(request1Object.getCategories().get(1)
+					.getName());
+			holder.categoryName3.setText(request1Object.getCategories().get(2)
+					.getName());
+			ImageRequestManager.get(context).requestImage(
+					context,
+					holder.categoryImage1,
+					ZApplication.getInstance().getImageUrl(
+							request1Object.getCategories().get(0)
+									.getImage_url()), -1);
+			ImageRequestManager.get(context).requestImage(
+					context,
+					holder.categoryImage2,
+					ZApplication.getInstance().getImageUrl(
+							request1Object.getCategories().get(1)
+									.getImage_url()), -1);
+			ImageRequestManager.get(context).requestImage(
+					context,
+					holder.categoryImage3,
+					ZApplication.getInstance().getImageUrl(
+							request1Object.getCategories().get(2)
+									.getImage_url()), -1);
 		}
 			break;
 		case BNC_HOME_LIST_TYPE_FEATURED: {
@@ -108,7 +183,9 @@ public class HomeActivityRecyclerViewAdapter extends
 					context, LinearLayoutManager.HORIZONTAL, false);
 			holder.recyclerView.setLayoutManager(layoutManager);
 			TopRatedBooksRecyclerAdapter adapter = new TopRatedBooksRecyclerAdapter(
-					mData.getFeaturedBooks(), BNC_HOME_LIST_TYPE_FEATURED);
+					request1Object.getFeatured_books(),
+					BNC_HOME_LIST_TYPE_FEATURED);
+
 			holder.recyclerView.setAdapter(adapter);
 			holder.showMoreBooksLayout.setOnClickListener(onClickListener);
 			holder.showMoreBooksLayout.setTag(BNC_HOME_LIST_TYPE_FEATURED);
@@ -122,7 +199,7 @@ public class HomeActivityRecyclerViewAdapter extends
 					context, LinearLayoutManager.HORIZONTAL, false);
 			holder.recyclerView.setLayoutManager(layoutManager);
 			TopRatedBooksRecyclerAdapter adapter = new TopRatedBooksRecyclerAdapter(
-					mData.getBestSellingBooks(),
+					request1Object.getBest_selling_books(),
 					BNC_HOME_LIST_TYPE_BEST_SELLING);
 			holder.recyclerView.setAdapter(adapter);
 			holder.showMoreBooksLayout.setOnClickListener(onClickListener);
@@ -137,7 +214,8 @@ public class HomeActivityRecyclerViewAdapter extends
 					context, LinearLayoutManager.HORIZONTAL, false);
 			holder.recyclerView.setLayoutManager(layoutManager);
 			TopRatedBooksRecyclerAdapter adapter = new TopRatedBooksRecyclerAdapter(
-					mData.getNewAddedBooks(), BNC_HOME_LIST_TYPE_NEW_ADDED);
+					request2Object.getLatest_books(),
+					BNC_HOME_LIST_TYPE_NEW_ADDED);
 			holder.recyclerView.setAdapter(adapter);
 			holder.showMoreBooksLayout.setOnClickListener(onClickListener);
 			holder.showMoreBooksLayout.setTag(BNC_HOME_LIST_TYPE_NEW_ADDED);
@@ -151,7 +229,8 @@ public class HomeActivityRecyclerViewAdapter extends
 					context, LinearLayoutManager.HORIZONTAL, false);
 			holder.recyclerView.setLayoutManager(layoutManager);
 			TopRatedBooksRecyclerAdapter adapter = new TopRatedBooksRecyclerAdapter(
-					mData.getTopRatedBooks(), BNC_HOME_LIST_TYPE_TOP_RATED);
+					request2Object.getTop_rated_books(),
+					BNC_HOME_LIST_TYPE_TOP_RATED);
 			holder.recyclerView.setAdapter(adapter);
 			holder.showMoreBooksLayout.setOnClickListener(onClickListener);
 			holder.showMoreBooksLayout.setTag(BNC_HOME_LIST_TYPE_TOP_RATED);
@@ -160,13 +239,24 @@ public class HomeActivityRecyclerViewAdapter extends
 		case BNC_HOME_LIST_TYPE_TAGS: {
 			HomeActivityListTagsViewHolder holder = (HomeActivityListTagsViewHolder) commonHolder;
 			holder.customFlowLayout.removeAllViews();
-			for (int i = 0; i < mData.getTags().size(); i++) {
+			for (int i = 0; i < request2Object.getTags().size(); i++) {
 				View view = LayoutInflater.from(context).inflate(
 						R.layout.tag_layout_blue, holder.customFlowLayout,
 						false);
 
+				TagObject tagObject = (TagObject) request2Object.getTags().get(
+						i);
+
 				TextView tagName = (TextView) view.findViewById(R.id.tag_name);
-				tagName.setText(mData.getTags().get(i).getName());
+				tagName.setText(tagObject.getTag_name());
+
+				LinearLayout containerTag = (LinearLayout) view
+						.findViewById(R.id.taglayoutbluecontainer);
+				containerTag.setTag(R.integer.bnc_shop_tag_bookid,
+						tagObject.getId());
+				containerTag.setTag(R.integer.bnc_shop_tag_bookname,
+						tagObject.getTag_name());
+				containerTag.setOnClickListener(onClickListener);
 
 				holder.customFlowLayout.addView(view);
 			}
@@ -180,7 +270,7 @@ public class HomeActivityRecyclerViewAdapter extends
 					context, LinearLayoutManager.HORIZONTAL, false);
 			holder.recyclerView.setLayoutManager(layoutManager);
 			TopRatedBooksRecyclerAdapter adapter = new TopRatedBooksRecyclerAdapter(
-					mData.getCurrentlyViewedBooks(),
+					request2Object.getCurrently_active_books(),
 					BNC_HOME_LIST_TYPE_CURRENTLY_ACTIVE);
 			holder.recyclerView.setAdapter(adapter);
 			holder.showMoreBooksLayout.setOnClickListener(onClickListener);
@@ -196,11 +286,23 @@ public class HomeActivityRecyclerViewAdapter extends
 					context, LinearLayoutManager.HORIZONTAL, false);
 			holder.recyclerView.setLayoutManager(layoutManager);
 			RecentlyViewedBooksRecyclerAdapter adapter = new RecentlyViewedBooksRecyclerAdapter(
-					mData.getRecentlyViewedBooks());
+					request2Object.getRecently_viewed_books(),
+					BNC_HOME_LIST_TYPE_RECENTLY_VIEWED);
 			holder.recyclerView.setAdapter(adapter);
 			holder.showMoreBooksLayout.setOnClickListener(onClickListener);
 			holder.showMoreBooksLayout
 					.setTag(BNC_HOME_LIST_TYPE_RECENTLY_VIEWED);
+			if (request2Object.getRecently_viewed_books().size() == 0) {
+				holder.recyclerView.setVisibility(View.GONE);
+				holder.nullCaseText.setVisibility(View.VISIBLE);
+			} else {
+				holder.recyclerView.setVisibility(View.VISIBLE);
+				holder.nullCaseText.setVisibility(View.GONE);
+			}
+		}
+			break;
+		case BNC_HOME_LIST_TYPE_LOADING_FOOTER: {
+
 		}
 			break;
 		}
@@ -245,8 +347,21 @@ public class HomeActivityRecyclerViewAdapter extends
 					parent, false);
 			holderTopRated = new HomeActivityListTopRatedViewHolder(v);
 			return holderTopRated;
+		case BNC_HOME_LIST_TYPE_LOADING_FOOTER:
+			v = LayoutInflater.from(context).inflate(
+					R.layout.loading_more_content_progress, parent, false);
+			HomeActivityListFooterLoadingHolder holderLoading = new HomeActivityListFooterLoadingHolder(
+					v);
+			return holderLoading;
 		}
 		return null;
+	}
+
+	class HomeActivityListFooterLoadingHolder extends RecyclerView.ViewHolder {
+
+		public HomeActivityListFooterLoadingHolder(View v) {
+			super(v);
+		}
 	}
 
 	class HomeActivityListHeaderViewHolder extends RecyclerView.ViewHolder {
@@ -265,7 +380,7 @@ public class HomeActivityRecyclerViewAdapter extends
 
 	class HomeActivityListTopRatedViewHolder extends RecyclerView.ViewHolder {
 
-		TextView headingText;
+		TextView headingText, nullCaseText;
 		RecyclerViewHorizontalScrolling recyclerView;
 		LinearLayout showMoreBooksLayout;
 
@@ -276,6 +391,8 @@ public class HomeActivityRecyclerViewAdapter extends
 					.findViewById(R.id.home_recycler_view_toprated);
 			showMoreBooksLayout = (LinearLayout) v
 					.findViewById(R.id.topratedmorebookslayout);
+			nullCaseText = (TextView) v
+					.findViewById(R.id.nullcasetextrecentlyviewed);
 		}
 	}
 
@@ -293,6 +410,8 @@ public class HomeActivityRecyclerViewAdapter extends
 	class HomeActivityListCategoryViewHolder extends RecyclerView.ViewHolder {
 
 		FrameLayout mainLayout1, mainLayout2, mainLayout3;
+		ImageView categoryImage1, categoryImage2, categoryImage3;
+		TextView categoryName1, categoryName2, categoryName3;
 
 		public HomeActivityListCategoryViewHolder(View v) {
 			super(v);
@@ -302,6 +421,19 @@ public class HomeActivityRecyclerViewAdapter extends
 					.findViewById(R.id.main_category_holder2);
 			mainLayout3 = (FrameLayout) v
 					.findViewById(R.id.main_category_holder3);
+			categoryImage1 = (ImageView) v
+					.findViewById(R.id.main_category_holder1_image);
+			categoryName1 = (TextView) v
+					.findViewById(R.id.main_category_holder1_text);
+			categoryImage2 = (ImageView) v
+					.findViewById(R.id.main_category_holder2_image);
+			categoryName2 = (TextView) v
+					.findViewById(R.id.main_category_holder2_text);
+			categoryImage3 = (ImageView) v
+					.findViewById(R.id.main_category_holder3_image);
+			categoryName3 = (TextView) v
+					.findViewById(R.id.main_category_holder3_text);
+
 			mainLayout1.setOnClickListener(onClickListener);
 			mainLayout2.setOnClickListener(onClickListener);
 			mainLayout3.setOnClickListener(onClickListener);
@@ -312,7 +444,7 @@ public class HomeActivityRecyclerViewAdapter extends
 
 		@Override
 		public int getCount() {
-			return mData.getHeaderImages().size();
+			return request1Object.getBanners().size();
 		}
 
 		@Override
@@ -335,6 +467,13 @@ public class HomeActivityRecyclerViewAdapter extends
 			ImageView image = (ImageView) imageLayout
 					.findViewById(R.id.header_images_home_header);
 
+			ImageRequestManager.get(context).requestImage(
+					context,
+					image,
+					ZApplication.getInstance().getImageUrl(
+							request1Object.getBanners().get(position)
+									.getBanner_image()), -1);
+
 			container.addView(imageLayout);
 			return imageLayout;
 		}
@@ -343,13 +482,12 @@ public class HomeActivityRecyclerViewAdapter extends
 	class TopRatedBooksRecyclerAdapter extends
 			RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-		ArrayList<HomeTopRatedBookObject> mData;
+		List<BookObject> mData;
 		int bookType;
 
-		public TopRatedBooksRecyclerAdapter(
-				ArrayList<HomeTopRatedBookObject> mData, int type) {
+		public TopRatedBooksRecyclerAdapter(List<BookObject> list, int type) {
 			super();
-			this.mData = mData;
+			this.mData = list;
 			this.bookType = type;
 		}
 
@@ -363,9 +501,23 @@ public class HomeActivityRecyclerViewAdapter extends
 			TopRatedBooksRecyclerHolder holder = (TopRatedBooksRecyclerHolder) holderCommon;
 			holder.mainContainer.setTag(R.integer.bnc_home_tag_position, pos);
 			holder.mainContainer.setTag(R.integer.bnc_home_tag_type, bookType);
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_bookname, mData
+					.get(pos).getName());
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_bookid, mData
+					.get(pos).getId());
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_isfavourite,
+					mData.get(pos).isIs_favourite());
 			holder.mainContainer.setOnDragListener(myDragListener);
 			holder.mainContainer.setOnLongClickListener(myLongClickListener);
 			holder.mainContainer.setOnClickListener(onClickListener);
+
+			holder.bookName.setText(mData.get(pos).getName());
+			holder.bookPrice.setText("₹ " + mData.get(pos).getPrice());
+			ImageRequestManager.get(context).requestImage(
+					context,
+					holder.bookImage,
+					ZApplication.getInstance().getImageUrl(
+							mData.get(pos).getImage_url()), -1);
 		}
 
 		@Override
@@ -382,12 +534,19 @@ public class HomeActivityRecyclerViewAdapter extends
 
 		class TopRatedBooksRecyclerHolder extends RecyclerView.ViewHolder {
 
-			LinearLayout mainContainer;
+			FrameLayout mainContainer;
+			ImageView bookImage;
+			TextView bookName, bookPrice;
 
 			public TopRatedBooksRecyclerHolder(View v) {
 				super(v);
-				mainContainer = (LinearLayout) v
+				mainContainer = (FrameLayout) v
 						.findViewById(R.id.main_layout_top_rated);
+				bookImage = (ImageView) v
+						.findViewById(R.id.top_rated_book_image);
+				bookName = (TextView) v.findViewById(R.id.top_rated_book_name);
+				bookPrice = (TextView) v
+						.findViewById(R.id.top_rated_book_price);
 			}
 		}
 	}
@@ -395,12 +554,14 @@ public class HomeActivityRecyclerViewAdapter extends
 	class RecentlyViewedBooksRecyclerAdapter extends
 			RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-		ArrayList<RecentlyViewedBooksObject> mData;
+		List<BookObject> mData;
+		int bookType;
 
 		public RecentlyViewedBooksRecyclerAdapter(
-				ArrayList<RecentlyViewedBooksObject> mData) {
-			super();
-			this.mData = mData;
+				List<BookObject> recently_viewed_books,
+				int bncHomeListTypeRecentlyViewed) {
+			this.mData = recently_viewed_books;
+			this.bookType = bncHomeListTypeRecentlyViewed;
 		}
 
 		@Override
@@ -409,8 +570,28 @@ public class HomeActivityRecyclerViewAdapter extends
 		}
 
 		@Override
-		public void onBindViewHolder(ViewHolder arg0, int arg1) {
+		public void onBindViewHolder(ViewHolder holderCom, int pos) {
+			RecentlyViewedBooksRecyclerHolder holder = (RecentlyViewedBooksRecyclerHolder) holderCom;
 
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_position, pos);
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_type, bookType);
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_bookname, mData
+					.get(pos).getName());
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_bookid, mData
+					.get(pos).getId());
+			holder.mainContainer.setTag(R.integer.bnc_home_tag_isfavourite,
+					mData.get(pos).isIs_favourite());
+			holder.mainContainer.setOnDragListener(myDragListener);
+			holder.mainContainer.setOnLongClickListener(myLongClickListener);
+			holder.mainContainer.setOnClickListener(onClickListener);
+
+			holder.bookName.setText(mData.get(pos).getName());
+			holder.bookPrice.setText("₹ " + mData.get(pos).getPrice());
+			ImageRequestManager.get(context).requestImage(
+					context,
+					holder.bookImage,
+					ZApplication.getInstance().getImageUrl(
+							mData.get(pos).getImage_url()), -1);
 		}
 
 		@Override
@@ -427,8 +608,19 @@ public class HomeActivityRecyclerViewAdapter extends
 
 		class RecentlyViewedBooksRecyclerHolder extends RecyclerView.ViewHolder {
 
+			RoundedImageView bookImage;
+			TextView bookName, bookPrice;
+			FrameLayout mainContainer;
+
 			public RecentlyViewedBooksRecyclerHolder(View v) {
 				super(v);
+				mainContainer = (FrameLayout) v
+						.findViewById(R.id.main_layout_top_rated);
+				bookImage = (RoundedImageView) v
+						.findViewById(R.id.top_rated_book_image);
+				bookName = (TextView) v
+						.findViewById(R.id.recent_viewed_book_name);
+				bookPrice = (TextView) v.findViewById(R.id.recent_view_price);
 			}
 		}
 	}
@@ -482,8 +674,8 @@ public class HomeActivityRecyclerViewAdapter extends
 							R.string.bnc_currently_active_books);
 					break;
 				case BNC_HOME_LIST_TYPE_RECENTLY_VIEWED:
-					actionBarTitle = context.getResources().getString(
-							R.string.bnc_recently_viewed_books);
+					intent = new Intent(context,
+							RecentlyViewedBooksActivity.class);
 					break;
 				}
 				intent.putExtra("actionbarname", actionBarTitle);
@@ -491,10 +683,50 @@ public class HomeActivityRecyclerViewAdapter extends
 				break;
 			case R.id.main_layout_top_rated:
 				intent = new Intent(context, BookDetailActivity.class);
+				int bookpos = (int) v.getTag(R.integer.bnc_home_tag_position);
+				int booktype = (int) v.getTag(R.integer.bnc_home_tag_type);
+				int bookid = 0;
+				switch (booktype) {
+				case BNC_HOME_LIST_TYPE_FEATURED:
+					bookid = request1Object.getFeatured_books().get(bookpos)
+							.getId();
+					break;
+				case BNC_HOME_LIST_TYPE_BEST_SELLING:
+					bookid = request1Object.getBest_selling_books()
+							.get(bookpos).getId();
+					break;
+				case BNC_HOME_LIST_TYPE_NEW_ADDED:
+					bookid = request2Object.getLatest_books().get(bookpos)
+							.getId();
+					break;
+				case BNC_HOME_LIST_TYPE_TOP_RATED:
+					bookid = request2Object.getTop_rated_books().get(bookpos)
+							.getId();
+					break;
+				case BNC_HOME_LIST_TYPE_CURRENTLY_ACTIVE:
+					bookid = request2Object.getCurrently_active_books()
+							.get(bookpos).getId();
+					break;
+				case BNC_HOME_LIST_TYPE_RECENTLY_VIEWED:
+					bookid = request2Object.getRecently_viewed_books()
+							.get(bookpos).getId();
+					break;
+
+				default:
+					break;
+				}
+				intent.putExtra("bookid", bookid);
 				context.startActivity(intent);
 				break;
+			case R.id.taglayoutbluecontainer:
+				int tagId = (int) v.getTag(R.integer.bnc_shop_tag_bookid);
+				String name = (String) v
+						.getTag(R.integer.bnc_shop_tag_bookname);
+				intent = new Intent(context, ShopActivity.class);
+				intent.putExtra("tag_wise", tagId);
+				intent.putExtra("actionbarname", name);
+				context.startActivity(intent);
 			default:
-				Log.w("As", "chde");
 				break;
 			}
 		}
@@ -506,11 +738,16 @@ public class HomeActivityRecyclerViewAdapter extends
 		public boolean onLongClick(View v) {
 			int pos = (int) v.getTag(R.integer.bnc_home_tag_position);
 			int type = (int) v.getTag(R.integer.bnc_home_tag_type);
-			Log.w("as", "positoon " + pos + " - " + type);
+			String bookName = (String) v
+					.getTag(R.integer.bnc_home_tag_bookname);
+			int bookId = (int) v.getTag(R.integer.bnc_home_tag_bookid);
+			boolean isFav = (boolean) v
+					.getTag(R.integer.bnc_home_tag_isfavourite);
+
 			ClipData data = ClipData.newPlainText("", "");
 			DragShadowBuilder shadowBuilder = new View.DragShadowBuilder();
 			v.startDrag(data, shadowBuilder, null, 0);
-			((HomeActivity) context).showButtonsLayout();
+			((HomeActivity) context).showButtonsLayout(bookId, isFav, bookName);
 
 			return true;
 		}

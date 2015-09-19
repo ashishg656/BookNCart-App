@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/buttons_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bnc_black_with_40_alpha" />
+
+    <ImageView
+        android:id="@+id/sharebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bnc_share_button_bg_selector" />
+
+    <ImageView
+        android:id="@+id/similarbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bnc_similar_button_bg_selector" />
+
+    <ImageView
+        android:id="@+id/favouritebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bnc_like_button_bg_selector" />
+
+    <ImageView
+        android:id="@+id/thumb_ind_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/thumb_indicator" />
+
+</FrameLayout>

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- FACEBOOK -->
+    <string name="facebook_app_id">509658639190611</string>
     <string name="app_name">BookNCart</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="bnc_open_drawer">Open Drawer</string>
     <string name="bnc_close_drawer">Close Drawer</string>
     <string name="bnc_home">Home</string>
+    <string name="bnc_shop_by_categories">Shop By Categories</string>
+    <string name="bnc_contact_us">Contact Us</string>
     <string name="bnc_top_rated_books">Top Rated Books</string>
     <string name="bnc_featured_books">Featured Books</string>
     <string name="bnc_best_selling_books">Best Selling Books</string>
@@ -15,8 +18,29 @@
     <string name="bnc_recently_viewed_books">Recently Viewed Books</string>
     <string name="demo_min_label">Min</string>
     <string name="demo_max_label">Max</string>
+    <string name="bnc_recently_viewed_books_null_case_text">You haven\'t viewed any books yet.</string>
 
     <!-- Sample long string -->
     <string name="bnc_sample_long_book_description">This text is meant to fill a long felt need for a comprehensive and authoritative book on heat and mass transfer for students of Mechanical/Chemical/Aeronautical/Production/Metallurgical engineering. The dual objective of understanding the physical phenomena involved and the ability to formulate and solve typical problems by an average student has been kept in mind while writing this book. In this text, an effort has been made to identify the transfer. This would help in better understanding of the phenomena of mass transfer which is generally thought to be a bit difficult to read. The subject matter has been developed from scratch to a sufficiently advanced stage in a logical and coherent manner with neat illustrations along with an adequate number of solved examples. A fairly large number of problems (with answers) at the end of each chapter will be exciting for both the teacher and the taught to have brain storming discussion in the class. The book has been appended with a set of selected MCQs along with its key. The role of experimentation in the teaching of heat and mass transfer is well established. Properly designed experiments reinforce the teaching of basic principles more thoroughly. Keeping this in mind, one full chapter comprising 12 typical experiments forms another speacial feature of this text. </string>
+    <string name="bnc_lorel_ipsum">This text is meant to fill a long felt need for a comprehensive and authoritative book on heat and mass transfer for students of Mechanical/Chemical/Aeronautical/Production/Metallurgical engineering. The dual objective of understanding the physical phenomena involved and the ability to formulate and solve typical problems by an average student has been kept in mind while writing this book. In this text, an effort has been made to identify the transfer. This would help in better understanding of the phenomena of mass transfer which is generally thought to </string>
+    <!-- User profile array -->
+    <string name="bnc_profile_logout_string">Log Out</string>
+
+    <string-array name="user_profile_list_items">
+        <item>Settings</item>
+        <item>@string/bnc_profile_logout_string</item>
+        <item>Edit Profile</item>
+        <item>Settings</item>
+        <item>Settings</item>
+        <item>@string/bnc_profile_logout_string</item>
+        <item>Settings</item>
+        <item>My Orders</item>
+        <item>Edit Profile</item>
+        <item>Settings</item>
+        <item>Settings</item>
+        <item>Log Out</item>
+    </string-array>
+
+    <string name="viewing_cached_data">Unable to fetch data from server. You are viewing cached data. Please check your internet connection and click here to RETRY!</string>
 
 </resources>

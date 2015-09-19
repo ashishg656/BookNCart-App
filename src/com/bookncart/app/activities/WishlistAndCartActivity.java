@@ -3,15 +3,18 @@ package com.bookncart.app.activities;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.animation.DecelerateInterpolator;
 
 import com.bookncart.app.R;
 import com.bookncart.app.fragments.CartFragment;
@@ -19,16 +22,16 @@ import com.bookncart.app.fragments.WishlistFragment;
 import com.bookncart.app.widgets.PagerSlidingTabStrip;
 
 @SuppressLint("NewApi")
-public class WishlistAndCartActivity extends AppCompatActivity implements
+public class WishlistAndCartActivity extends BaseActivity implements
 		OnPageChangeListener {
 
-	ViewPager viewPager;
+	public ViewPager viewPager;
 	PagerSlidingTabStrip pagerSlidingTabStrip;
-	Toolbar toolbar;
-	int toolbarHeight;
 	MyPagerAdapter adapter;
 	AppBarLayout appBarLayout;
 	FloatingActionButton floatingActionButton;
+	public static final int TRANSLATION_DURATION = 200;
+	public CoordinatorLayout coordinatorLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class WishlistAndCartActivity extends AppCompatActivity implements
 		viewPager = (ViewPager) findViewById(R.id.pager_shopandcart);
 		pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabstripcartwishlist);
 		floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_cart);
+		coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cordinatorwishlist);
 
 		toolbar.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
@@ -104,6 +108,16 @@ public class WishlistAndCartActivity extends AppCompatActivity implements
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+			this.finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public void onPageScrollStateChanged(int state) {
 		if (state == ViewPager.SCROLL_STATE_IDLE) {
 			if (viewPager.getCurrentItem() == 1) {
@@ -129,7 +143,8 @@ public class WishlistAndCartActivity extends AppCompatActivity implements
 
 	@SuppressLint("NewApi")
 	@Override
-	public void onPageScrolled(int pos, float positionOffset, int arg2) {
+	public void onPageScrolled(int pos, float positionOffset,
+			int positionOffsetPixels) {
 
 	}
 
@@ -137,5 +152,44 @@ public class WishlistAndCartActivity extends AppCompatActivity implements
 	@Override
 	public void onPageSelected(int pos) {
 
+	}
+
+	@SuppressLint("NewApi")
+	public void scrollToolbarBy(int dy) {
+		float requestedTranslation = appBarLayout.getTranslationY() + dy;
+		if (requestedTranslation < -toolbarHeight) {
+			requestedTranslation = -toolbarHeight;
+			appBarLayout.setTranslationY(requestedTranslation);
+		} else if (requestedTranslation > 0) {
+			requestedTranslation = 0;
+			appBarLayout.setTranslationY(requestedTranslation);
+		} else if (requestedTranslation >= -toolbarHeight
+				&& requestedTranslation <= 0) {
+			appBarLayout.setTranslationY(requestedTranslation);
+		}
+	}
+
+	@SuppressLint("NewApi")
+	public void scrollToolbarAfterTouchEnds() {
+		float currentTranslation = -appBarLayout.getTranslationY();
+		if (currentTranslation > toolbarHeight / 2) {
+			appBarLayout.animate().translationY(-toolbarHeight)
+					.setDuration(TRANSLATION_DURATION)
+					.setInterpolator(new DecelerateInterpolator());
+		} else {
+			appBarLayout.animate().translationY(0)
+					.setDuration(TRANSLATION_DURATION)
+					.setInterpolator(new DecelerateInterpolator());
+		}
+	}
+
+	public void setToolbarTranslation(View firstChild) {
+		if (firstChild.getTop() > pagerSlidingTabStrip.getHeight()) {
+			appBarLayout.animate().translationY(0)
+					.setDuration(TRANSLATION_DURATION)
+					.setInterpolator(new DecelerateInterpolator());
+		} else {
+			scrollToolbarAfterTouchEnds();
+		}
 	}
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bnc_toolbar_height"
+    android:background="@android:color/transparent"
+    android:gravity="center"
+    android:padding="0dp" >
+
+    <LinearLayout
+        android:id="@+id/backbuttonprofile"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/z_user_profile_article_bg_selector"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/bnc_margin_small"
+            android:paddingRight="@dimen/bnc_margin_small" >
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_navigation_arrow_back_white" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/actionbariconview"
+            android:layout_width="42dp"
+            android:layout_height="42dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/bnc_margin_small"
+        android:layout_weight="1"
+        android:includeFontPadding="false"
+        android:textColor="@color/bnc_white"
+        android:textSize="22sp" />
+
+</LinearLayout>

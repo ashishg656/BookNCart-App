@@ -10,15 +10,15 @@
         <item
             android:id="@+id/drawer_experts"
             android:icon="@drawable/ic_launcher"
-            android:title="@string/bnc_home"/>
+            android:title="@string/bnc_shop_by_categories"/>
         <item
             android:id="@+id/drawer_shop"
             android:icon="@drawable/ic_launcher"
-            android:title="@string/bnc_home"/>
+            android:title="@string/bnc_recently_viewed_books"/>
         <item
             android:id="@+id/drawer_profile"
             android:icon="@drawable/ic_launcher"
-            android:title="@string/bnc_home"/>
+            android:title="@string/bnc_contact_us"/>
     </group>
 
 </menu>

@@ -12,30 +12,45 @@
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="@dimen/bnc_margin_large"
-        android:background="@drawable/rounded_corner_linear_layout_stroke_bg"
-        android:gravity="center"
-        android:padding="10dp" >
+        android:background="@drawable/rounded_corner_linear_layout_stroke_bg" >
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_favourite_gray" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/bnc_margin_mini"
-            android:layout_marginRight="@dimen/bnc_margin_mini"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Add More From Wishlist"
-            android:textColor="@color/bnc_text_color_medium_dark"
-            android:textSize="@dimen/bnc_font_supermini" />
+            <LinearLayout
+                android:id="@+id/addmorefromwishlist"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bnc_button_height"
+                android:background="@drawable/z_user_profile_article_bg_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp" >
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/ic_hardware_right" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_favourite_gray" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/bnc_margin_mini"
+                    android:layout_marginRight="@dimen/bnc_margin_mini"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="Add More From Wishlist"
+                    android:textColor="@color/bnc_text_color_medium_dark"
+                    android:textSize="@dimen/bnc_font_supermini" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_hardware_right" />
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
     <TextView
@@ -51,119 +66,143 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/bnc_margin_small"
-        android:background="@drawable/shadow_bg_shop"
-        android:orientation="vertical"
-        android:padding="10dp" >
+        android:background="@drawable/shadow_bg_shop" >
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bnc_margin_small"
-            android:orientation="horizontal" >
+            android:clickable="true"
+            android:foreground="@drawable/z_user_profile_article_bg_selector" >
 
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Total Quantity"
-                android:textColor="@color/bnc_text_color_light"
-                android:textSize="@dimen/bnc_font_mini"
-                android:textStyle="bold" />
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="14"
-                android:textColor="@color/bnc_text_color_medium_dark"
-                android:textSize="@dimen/bnc_font_small"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bnc_margin_small"
+                    android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bnc_margin_small"
-            android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Total Quantity"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_mini"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cart Total"
-                android:textColor="@color/bnc_text_color_light"
-                android:textSize="@dimen/bnc_font_mini"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/totalquantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="14"
+                        android:textColor="@color/bnc_text_color_medium_dark"
+                        android:textSize="@dimen/bnc_font_small"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="₹ 550"
-                android:textColor="@color/bnc_text_color_medium_dark"
-                android:textSize="@dimen/bnc_font_small"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bnc_margin_small"
+                    android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bnc_margin_small"
-            android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cart Total"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_mini"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Delivery Charges"
-                android:textColor="@color/bnc_text_color_light"
-                android:textSize="@dimen/bnc_font_mini"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/carttotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹ 550"
+                        android:textColor="@color/bnc_text_color_medium_dark"
+                        android:textSize="@dimen/bnc_font_small"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="₹ 50"
-                android:textColor="@color/bnc_green_color_primary"
-                android:textSize="@dimen/bnc_font_small"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/bnc_margin_small"
+                    android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/bnc_margin_small"
-            android:layout_marginTop="@dimen/bnc_margin_large"
-            android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Delivery Charges"
+                        android:textColor="@color/bnc_text_color_light"
+                        android:textSize="@dimen/bnc_font_mini"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Total Amount"
-                android:textColor="@color/bnc_text_color_medium_dark"
-                android:textSize="@dimen/bnc_font_small"
-                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/deliverycarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹ 50"
+                        android:textColor="@color/bnc_green_color_primary"
+                        android:textSize="@dimen/bnc_font_small"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="₹ 550"
-                android:textColor="@color/PrimaryColor"
-                android:textSize="@dimen/bnc_font_medium"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/bnc_margin_small"
+                    android:layout_marginTop="@dimen/bnc_margin_large"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Total Amount"
+                        android:textColor="@color/bnc_text_color_medium_dark"
+                        android:textSize="@dimen/bnc_font_small"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/totalamount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹ 550"
+                        android:textColor="@color/PrimaryColor"
+                        android:textSize="@dimen/bnc_font_medium"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="@dimen/bnc_margin_medium"
-        android:background="@drawable/rounded_corner_linear_layout_stroke_bg"
-        android:gravity="center"
-        android:padding="@dimen/bnc_margin_medium"
-        android:text="PLACE ORDER"
-        android:textColor="@color/bnc_green_color_primary"
-        android:textSize="@dimen/bnc_font_small" />
+        android:background="@drawable/rounded_corner_linear_layout_stroke_bg" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/z_user_profile_article_bg_selector"
+            android:clickable="true"
+            android:gravity="center"
+            android:padding="@dimen/bnc_margin_medium"
+            android:text="PLACE ORDER"
+            android:textColor="@color/bnc_green_color_primary"
+            android:textSize="@dimen/bnc_font_small" />
+    </FrameLayout>
 
 </LinearLayout>

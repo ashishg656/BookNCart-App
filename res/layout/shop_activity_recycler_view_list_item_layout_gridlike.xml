@@ -7,46 +7,62 @@
     android:background="@drawable/shadow_bg_shop"
     android:orientation="vertical" >
 
-    <com.bookncart.app.widgets.RoundedImageView
-        android:id="@+id/shop_layout_image_grid"
+    <FrameLayout
+        android:id="@+id/shopactivityitemviewholdercontainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/book3"
-        app:riv_corner_radius_top_left="3dp"
-        app:riv_corner_radius_top_right="3dp" />
+        android:clickable="true"
+        android:foreground="@drawable/z_user_profile_article_bg_selector" >
 
-    <TextView
-        android:id="@+id/book_name_shop_grid"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="@dimen/bnc_margin_mini"
-        android:layout_marginRight="@dimen/bnc_margin_mini"
-        android:layout_marginTop="@dimen/bnc_margin_mini"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:text="Book name here can be long too old"
-        android:textColor="@color/bnc_text_color_dark"
-        android:textSize="@dimen/bnc_font_mini" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/bnc_margin_mini"
-        android:paddingRight="@dimen/bnc_margin_mini" >
+            <com.bookncart.app.widgets.RoundedImageView
+                android:id="@+id/shop_layout_image_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/book3"
+                app:riv_corner_radius_top_left="3dp"
+                app:riv_corner_radius_top_right="3dp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="₹ 550"
-            android:textColor="@color/PrimaryColor"
-            android:textSize="@dimen/bnc_font_mini"
-            android:textStyle="bold" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/book_name_shop_grid"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/bnc_margin_mini"
+                android:layout_marginRight="@dimen/bnc_margin_mini"
+                android:layout_marginTop="@dimen/bnc_margin_mini"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="Book name here can be long too old"
+                android:textColor="@color/bnc_text_color_dark"
+                android:textSize="@dimen/bnc_font_mini" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/bnc_margin_mini"
+                android:paddingRight="@dimen/bnc_margin_mini" >
+
+                <TextView
+                    android:id="@+id/book_price_shop_grid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/bnc_margin_mini"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="₹ 550"
+                    android:textColor="@color/PrimaryColor"
+                    android:textSize="@dimen/bnc_font_mini"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

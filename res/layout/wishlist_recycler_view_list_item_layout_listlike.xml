@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.bookncart.app"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:background="@drawable/shadow_bg_shop"
+    android:orientation="horizontal" >
+
+    <FrameLayout
+        android:id="@+id/shopactivityitemviewholdercontainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:foreground="@drawable/z_user_profile_article_bg_selector" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/shop_layout_image_grid"
+                android:layout_width="@dimen/bnc_shop_list_image_width"
+                android:layout_height="@dimen/bnc_shop_list_image_height"
+                android:layout_margin="@dimen/bnc_margin_mini"
+                android:scaleType="centerCrop"
+                android:src="@drawable/book3" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/book_name_shop_grid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/bnc_margin_mini"
+                            android:ellipsize="end"
+                            android:maxLines="3"
+                            android:text="Book name here can be long too old hello there"
+                            android:textColor="@color/bnc_text_color_medium_dark"
+                            android:textSize="@dimen/bnc_font_mini" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Author: "
+                                android:textColor="@color/bnc_text_color_light"
+                                android:textSize="@dimen/bnc_font_supermini" />
+
+                            <TextView
+                                android:id="@+id/wishlistbookauthor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:text="Author name here"
+                                android:textColor="@color/bnc_text_color_medium_dark"
+                                android:textSize="@dimen/bnc_font_mini" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Price: "
+                                android:textColor="@color/bnc_text_color_light"
+                                android:textSize="@dimen/bnc_font_supermini" />
+
+                            <TextView
+                                android:id="@+id/book_price_shop_grid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:text="Rs. 500"
+                                android:textColor="@color/PrimaryColor"
+                                android:textSize="@dimen/bnc_font_mini"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ic_remove_from_wishlist_wishlist"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center" >
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_delete_red" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="right|bottom" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/bnc_margin_mini"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:ellipsize="end"
+                        android:includeFontPadding="false"
+                        android:padding="@dimen/bnc_margin_mini"
+                        android:text="Move to cart"
+                        android:textAllCaps="true"
+                        android:textColor="@color/bnc_green_color_primary"
+                        android:textSize="@dimen/bnc_font_mini"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

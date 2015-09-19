@@ -53,6 +53,17 @@ public final class FontsOverride {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
+
+			try {
+				final Field staticField = Typeface.class
+						.getDeclaredField(staticTypefaceFieldName);
+				staticField.setAccessible(true);
+				staticField.set(null, newTypeface);
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
 		} else {
 			try {
 				final Field staticField = Typeface.class

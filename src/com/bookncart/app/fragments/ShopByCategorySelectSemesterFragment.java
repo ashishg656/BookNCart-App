@@ -1,5 +1,7 @@
 package com.bookncart.app.fragments;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,7 +15,8 @@ import android.view.ViewGroup;
 import com.bookncart.app.R;
 import com.bookncart.app.activities.ShopByCategoriesActivity;
 import com.bookncart.app.adapters.ShopByCategoriesFragmentRecyclerViewAdapter;
-import com.bookncart.app.objects.ShopByCategoriesObject;
+import com.bookncart.app.baseobjects.ShopByCategoriesObject;
+import com.bookncart.app.baseobjects.ShopByCategoriesSingleCategoryObject;
 
 public class ShopByCategorySelectSemesterFragment extends Fragment {
 
@@ -21,7 +24,8 @@ public class ShopByCategorySelectSemesterFragment extends Fragment {
 	public GridLayoutManager layoutManager;
 	ShopByCategoriesFragmentRecyclerViewAdapter adapter;
 	int position;
-	ShopByCategoriesObject mData;
+	List<ShopByCategoriesSingleCategoryObject> mData;
+	String categoryName;
 
 	public static ShopByCategorySelectSemesterFragment newInstance(Bundle b) {
 		ShopByCategorySelectSemesterFragment frg = new ShopByCategorySelectSemesterFragment();
@@ -60,17 +64,20 @@ public class ShopByCategorySelectSemesterFragment extends Fragment {
 		recyclerView.setLayoutManager(layoutManager);
 
 		position = getArguments().getInt("position");
-		mData = ((ShopByCategoriesActivity) getActivity()).mData.get(position);
+		mData = ((ShopByCategoriesActivity) getActivity()).mData
+				.getMain_categories().get(position).getSub_categories();
+
+		categoryName = getArguments().getString("categoryname", "BookNCart");
 
 		adapter = new ShopByCategoriesFragmentRecyclerViewAdapter(mData,
-				getActivity());
+				getActivity(), categoryName);
 		recyclerView.setAdapter(adapter);
 
 		recyclerView.addOnScrollListener(new OnScrollListener() {
 
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				((ShopByCategoriesActivity)getActivity()).translateUp(dy);
+				((ShopByCategoriesActivity) getActivity()).translateUp(dy);
 				super.onScrolled(recyclerView, dx, dy);
 			}
 

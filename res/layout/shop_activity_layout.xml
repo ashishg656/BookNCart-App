@@ -20,6 +20,8 @@
             android:paddingTop="102dp"
             android:scrollbars="none" />
 
+        <include layout="@layout/progress_layout" />
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbarlayout"
             android:layout_width="match_parent"
@@ -90,5 +92,7 @@
     </FrameLayout>
 
     <include layout="@layout/shop_activity_filter_layout" />
+
+    <include layout="@layout/connection_error_layout" />
 
 </FrameLayout>

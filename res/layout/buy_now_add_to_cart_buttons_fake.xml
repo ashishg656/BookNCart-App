@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bnc_button_height"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/buynowbuttonfake"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/green_color_selector"
+        android:clickable="true"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buy now"
+            android:textAllCaps="true"
+            android:textColor="@color/bnc_white"
+            android:textSize="@dimen/bnc_font_mini"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addtocartbuttonfake"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/blue_color_selector"
+        android:clickable="true"
+        android:gravity="center" >
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="@dimen/bnc_margin_mini"
+            android:src="@drawable/add_to_cart_normal_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="Add to cart"
+            android:textAllCaps="true"
+            android:textColor="@color/bnc_white"
+            android:textSize="@dimen/bnc_font_mini"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/gotocartbuttonfake"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/blue_color_selector"
+        android:clickable="true"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="@dimen/bnc_margin_mini"
+            android:src="@drawable/ic_cart" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="Go to cart"
+            android:textAllCaps="true"
+            android:textColor="@color/bnc_white"
+            android:textSize="@dimen/bnc_font_mini"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

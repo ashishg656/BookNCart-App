@@ -2,6 +2,9 @@ package com.bookncart.app.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -13,11 +16,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -27,28 +31,30 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bookncart.app.R;
+import com.bookncart.app.application.ZApplication;
+import com.bookncart.app.baseobjects.ShopByCategoriesObject;
 import com.bookncart.app.circularreveal.SupportAnimator;
 import com.bookncart.app.circularreveal.ViewAnimationUtils;
 import com.bookncart.app.extras.MyAnimationListener;
+import com.bookncart.app.extras.ZRequestTags;
 import com.bookncart.app.fragments.ShopByCategorySelectSemesterFragment;
 import com.bookncart.app.notboringactionbar.KenBurnsSupportView;
-import com.bookncart.app.objects.ShopByCategoriesObject;
-import com.bookncart.app.objects.ShopByCategoriesSingleCategoryObject;
+import com.bookncart.app.serverApi.UploadManager;
+import com.bookncart.app.serverApi.UploadManagerCallback;
 import com.bookncart.app.widgets.PagerSlidingTabStrip;
 
 @SuppressLint("NewApi")
-public class ShopByCategoriesActivity extends AppCompatActivity implements
-		OnPageChangeListener {
+public class ShopByCategoriesActivity extends BaseActivity implements
+		OnPageChangeListener, ZRequestTags, UploadManagerCallback,
+		OnClickListener {
 
-	Toolbar toolbar;
 	FrameLayout mainHeaderLayout;
 	int categoryPos;
 	PagerSlidingTabStrip pagerTabStrip;
-	public ArrayList<ShopByCategoriesObject> mData;
 	ViewPager viewPager;
 	MyPagerAdapter adapter;
 	ImageView circularHeaderImage;
-	int initialToolbarBottom, toolbarHeight;
+	int initialToolbarBottom;
 	float minimumHeaderTranslation;
 	KenBurnsSupportView kenBurnsSupportView;
 	View kenburnsImageBg, circularRevealView;
@@ -59,11 +65,24 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 	SupportAnimator animator;
 	int alpha;
 
+	public ShopByCategoriesObject mData;
+
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shop_by_categories_activity_layout);
+
+		setConnectionErrorVariables();
+
+		retryDataConnectionLayout.setOnClickListener(this);
+
+		UploadManager.getInstance().addCallback(this, this);
+
+		progressDarkCircle = (View) findViewById(R.id.dark_circle);
+		progressLightCircle = (View) findViewById(R.id.light_circle);
+		progressImage = (ImageView) findViewById(R.id.image_progress);
+		progressLayoutContainer = (FrameLayout) findViewById(R.id.progresslayutcontainre);
 
 		hashmapFragments = new HashMap<>();
 
@@ -76,7 +95,6 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 		circularHeaderImage = (ImageView) findViewById(R.id.header_imageview);
 		mainHeaderLayout = (FrameLayout) findViewById(R.id.frame_layout_header_container);
 		kenBurnsSupportView = (KenBurnsSupportView) findViewById(R.id.kenburnssupportview);
-		kenBurnsSupportView.setResourceIds(R.drawable.book1, R.drawable.book2);
 		kenburnsImageBg = (View) findViewById(R.id.image_overlay_bg);
 		circularRevealView = (View) findViewById(R.id.circular_reveal_view);
 
@@ -117,8 +135,19 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 					}
 				});
 
-		addData();
+		loadData();
+	}
 
+	private void loadData() {
+		String url = ZApplication.getInstance().getBaseUrl()
+				+ "categories_all_category/";
+		List<NameValuePair> nameValuePairs = new ArrayList<>();
+		UploadManager.getInstance().makeAyncRequest(url,
+				BNC_CATEGORIES_REQUEST_TAG, BNC_CATEGORIES_REQUEST_TAG,
+				BNC_CATEGORIES_REQUEST_TAG, null, nameValuePairs, null);
+	}
+
+	void fillDataInViewPager() {
 		adapter = new MyPagerAdapter(getSupportFragmentManager());
 		viewPager.setAdapter(adapter);
 		viewPager.setOffscreenPageLimit(3);
@@ -135,30 +164,6 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 		}
 	}
 
-	private void addData() {
-		mData = new ArrayList<>();
-		ArrayList<ShopByCategoriesSingleCategoryObject> subCategories = new ArrayList<>();
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		subCategories.add(new ShopByCategoriesSingleCategoryObject("", 0, 0,
-				false, false, ""));
-		mData.add(new ShopByCategoriesObject(subCategories, "computer", 0, ""));
-		mData.add(new ShopByCategoriesObject(subCategories, "computer", 0, ""));
-		mData.add(new ShopByCategoriesObject(subCategories, "computer", 0, ""));
-	}
-
 	class MyPagerAdapter extends FragmentPagerAdapter {
 
 		public MyPagerAdapter(FragmentManager fm) {
@@ -169,6 +174,8 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 		public Fragment getItem(int pos) {
 			Bundle bundle = new Bundle();
 			bundle.putInt("position", pos);
+			bundle.putString("categoryname", mData.getMain_categories()
+					.get(pos).getName());
 			ShopByCategorySelectSemesterFragment frag = ShopByCategorySelectSemesterFragment
 					.newInstance(bundle);
 			hashmapFragments.put(pos, frag);
@@ -177,18 +184,28 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 
 		@Override
 		public int getCount() {
-			return mData.size();
+			return mData.getMain_categories().size();
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return mData.get(position).getCategoryName();
+			return mData.getMain_categories().get(position).getName();
 		}
 	}
 
 	@Override
-	public void onPageScrollStateChanged(int arg0) {
+	public void onPageScrollStateChanged(int state) {
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+			this.finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@SuppressLint("NewApi")
@@ -211,6 +228,9 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 	@SuppressLint("NewApi")
 	@Override
 	public void onPageSelected(int pos) {
+		kenBurnsSupportView.setResourceIds(mData.getMain_categories().get(pos)
+				.getImage_url(), mData.getMain_categories().get(pos)
+				.getImage_url_2());
 		if (pos == 0) {
 			pageSelectedAnimation(
 					getResources()
@@ -348,6 +368,47 @@ public class ShopByCategoriesActivity extends AppCompatActivity implements
 			isCircularRevealShown = true;
 			circularHeaderImage.setBackgroundResource(circularimagebg);
 			circularHeaderImage.setImageResource(circularimage);
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		UploadManager.getInstance().removeCallback(this);
+		super.onDestroy();
+	}
+
+	@Override
+	public void uploadFinished(int requestType, int objectId, Object data,
+			int uploadId, boolean status, int parserId) {
+		if (requestType == BNC_CATEGORIES_REQUEST_TAG) {
+			hideMainContentLoadingAnimations();
+			if (status) {
+				hideConnectionErrorLayout();
+				this.mData = (ShopByCategoriesObject) data;
+				fillDataInViewPager();
+			} else {
+				showConnectionErrorLayout();
+			}
+		}
+	}
+
+	@Override
+	public void uploadStarted(int requestType, int objectId, int parserId,
+			Object object) {
+		if (requestType == BNC_CATEGORIES_REQUEST_TAG) {
+			showMainContentLoadingAnimations();
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.retrylayoutconnectionerror:
+			loadData();
+			break;
+
+		default:
+			break;
 		}
 	}
 }

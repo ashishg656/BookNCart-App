@@ -3,7 +3,18 @@
 
     <integer name="bnc_home_tag_position">0</integer>
     <integer name="bnc_home_tag_type">1</integer>
+    <integer name="bnc_home_tag_bookname">2</integer>
+    <integer name="bnc_home_tag_bookid">3</integer>
+    <integer name="bnc_home_tag_isfavourite">4</integer>
     <integer name="bnc_home_more_tag_booktype">2</integer>
     <integer name="bnc_home_more_tag_actionbarname">3</integer>
+
+    <!-- shop activity -->
+    <integer name="bnc_shop_tag_bookid">10</integer>
+    <integer name="bnc_shop_tag_bookname">11</integer>
+    <integer name="bnc_shop_tag_book_isfavourite">12</integer>
+
+    <!-- Wishlist sctivity -->
+    <integer name="bnc_wishlist_holder">13</integer>
 
 </resources>

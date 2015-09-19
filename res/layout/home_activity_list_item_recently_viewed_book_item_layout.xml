@@ -7,43 +7,59 @@
     android:background="@drawable/shadow_bg"
     android:orientation="vertical" >
 
-    <com.bookncart.app.widgets.RoundedImageView
-        android:id="@+id/top_rated_book_image"
+    <FrameLayout
+        android:id="@+id/main_layout_top_rated"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bnc_home_recent_book_image_height"
-        android:layout_marginBottom="@dimen/bnc_margin_mini"
-        android:scaleType="centerCrop"
-        android:src="@drawable/book4"
-        app:riv_corner_radius_top_left="3dp"
-        app:riv_corner_radius_top_right="3dp" />
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:foreground="@drawable/z_user_profile_article_bg_selector" >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:paddingLeft="@dimen/bnc_margin_mini"
-        android:paddingRight="@dimen/bnc_margin_mini"
-        android:text="Book name here can be long too old"
-        android:textColor="@color/bnc_text_color_medium_dark"
-        android:textSize="@dimen/bnc_font_supermini" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/bnc_margin_mini"
-        android:paddingRight="@dimen/bnc_margin_mini" >
+            <com.bookncart.app.widgets.RoundedImageView
+                android:id="@+id/top_rated_book_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bnc_home_recent_book_image_height"
+                android:layout_marginBottom="@dimen/bnc_margin_mini"
+                android:scaleType="centerCrop"
+                android:src="@drawable/book4"
+                app:riv_corner_radius_top_left="3dp"
+                app:riv_corner_radius_top_right="3dp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="₹ 550"
-            android:textColor="@color/PrimaryColor"
-            android:textSize="@dimen/bnc_font_supermini"
-            android:textStyle="bold" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/recent_viewed_book_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="@dimen/bnc_margin_mini"
+                android:paddingRight="@dimen/bnc_margin_mini"
+                android:text="Book name here can be long too old"
+                android:textColor="@color/bnc_text_color_medium_dark"
+                android:textSize="@dimen/bnc_font_supermini" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/bnc_margin_mini"
+                android:paddingRight="@dimen/bnc_margin_mini" >
+
+                <TextView
+                    android:id="@+id/recent_view_price"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="₹ 550"
+                    android:textColor="@color/PrimaryColor"
+                    android:textSize="@dimen/bnc_font_supermini"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

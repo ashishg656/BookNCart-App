@@ -7,6 +7,7 @@
     android:padding="@dimen/bnc_margin_small" >
 
     <TextView
+        android:id="@+id/itemscart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ITEMS (2)"
@@ -25,6 +26,7 @@
             android:textColor="@color/bnc_text_color_light" />
 
         <TextView
+            android:id="@+id/carttotalhead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="₹ 550"

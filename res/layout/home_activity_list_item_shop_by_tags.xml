@@ -8,6 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/bnc_margin_mini"
         android:paddingTop="@dimen/bnc_margin_mini" >
@@ -28,15 +30,18 @@
             android:text="MORE"
             android:textColor="@color/bnc_red_color_primary"
             android:textSize="@dimen/bnc_font_mini"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 
     <com.bookncart.app.widgets.CustomFlowLayout
         android:id="@+id/tagcustomflowlayouthome"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bnc_home_tag_list_height"
+        android:layout_marginBottom="@dimen/bnc_margin_small"
         android:layout_marginLeft="@dimen/bnc_margin_small"
         android:layout_marginRight="@dimen/bnc_margin_small"
+        android:layout_marginTop="@dimen/bnc_margin_mini"
         android:gravity="center_horizontal" >
     </com.bookncart.app.widgets.CustomFlowLayout>
 

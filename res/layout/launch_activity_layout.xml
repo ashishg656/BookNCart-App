@@ -44,24 +44,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/bnc_margin_small"
+            android:paddingLeft="@dimen/bnc_margin_small"
+            android:paddingRight="@dimen/bnc_margin_small" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Login with facebook"
-                android:textColor="@android:color/white" />
+            <Button
+                android:id="@+id/facebook_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="@dimen/bnc_margin_small"
+                android:background="@drawable/facebook_login_button_bg_selector"
+                android:drawableLeft="@drawable/facebook_logo"
+                android:paddingLeft="@dimen/bnc_margin_small"
+                android:text="Login with Facebook"
+                android:textColor="@color/bnc_white" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Login with facebook"
-                android:textColor="@android:color/white" />
-
-            <com.google.android.gms.common.SignInButton
+            <Button
                 android:id="@+id/google_sign_in_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="40dp"
+                android:background="@drawable/google_login_button_bg_selector"
+                android:drawableLeft="@drawable/google_logo"
+                android:paddingLeft="@dimen/bnc_margin_small"
+                android:text="Login with Google"
+                android:textColor="@color/bnc_white" />
         </LinearLayout>
     </LinearLayout>
 

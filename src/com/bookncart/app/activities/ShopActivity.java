@@ -1,21 +1,28 @@
 package com.bookncart.app.activities;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -31,28 +38,29 @@ import android.widget.Toast;
 
 import com.bookncart.app.R;
 import com.bookncart.app.adapters.ShopActivityListAdapter;
+import com.bookncart.app.application.ZApplication;
+import com.bookncart.app.baseobjects.ShopActivityObject;
 import com.bookncart.app.extras.AppConstants;
 import com.bookncart.app.extras.MyAnimatorListener;
-import com.bookncart.app.objects.HomeTopRatedBookObject;
+import com.bookncart.app.extras.ZRequestTags;
+import com.bookncart.app.serverApi.UploadManager;
+import com.bookncart.app.serverApi.UploadManagerCallback;
 import com.bookncart.app.widgets.RangeSeekBar;
 import com.bookncart.app.widgets.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 @SuppressLint("NewApi")
-public class ShopActivity extends AppCompatActivity implements AppConstants,
-		OnClickListener {
+public class ShopActivity extends BaseActivity implements AppConstants,
+		OnClickListener, ZRequestTags, UploadManagerCallback {
 
 	int bookType;
 	String actionBarTitle;
-	Toolbar toolBar;
 	AppBarLayout appBarLayout;
-	TextView toolbarTitle;
 	RecyclerView recyclerView;
 	GridLayoutManager gridLayoutManager;
 	LinearLayoutManager linearLayoutManager;
 	ShopActivityListAdapter adapter;
 	int appBarLayoutHeight, filterLayoutHeight;
 	public static final int TRANSLATION_DURATION = 200;
-	ArrayList<HomeTopRatedBookObject> mData;
 	ImageView changeDisplayTypeButton;
 	public int currentDisplayType = BNC_SHOP_DISPLAY_TYPE_GRID;
 	LinearLayout sortButtonLayout, filtersButtonLayout;
@@ -71,11 +79,27 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 			nonFeaturedBooksCheckBox;
 	LinearLayout applyFiltersButton;
 
+	// request params
+	Integer nextPageNumber = 1;
+	boolean isMoreAllowed;
+	boolean isRequestRunning = false;
+	int modeToSend = -1;
+	boolean categoryWise = false;
+	int categoryId;
+	boolean tagWise = false;
+	int tagId;
+
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shop_activity_layout);
+
+		UploadManager.getInstance().addCallback(this, this);
+
+		setConnectionErrorVariables();
+
+		retryDataConnectionLayout.setOnClickListener(this);
 
 		recyclerView = (RecyclerView) findViewById(R.id.shop_recycler_view);
 		appBarLayout = (AppBarLayout) findViewById(R.id.appbarlayout);
@@ -93,13 +117,17 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 		featuredBooksCheckBox = (CheckBox) findViewById(R.id.featuredbookscheckbox);
 		nonFeaturedBooksCheckBox = (CheckBox) findViewById(R.id.nonfeaturedbookscheckbox);
 		applyFiltersButton = (LinearLayout) findViewById(R.id.applyfiltersbutton);
+		progressDarkCircle = (View) findViewById(R.id.dark_circle);
+		progressLightCircle = (View) findViewById(R.id.light_circle);
+		progressImage = (ImageView) findViewById(R.id.image_progress);
+		progressLayoutContainer = (FrameLayout) findViewById(R.id.progresslayutcontainre);
 
-		toolBar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-		setSupportActionBar(toolBar);
+		setSupportActionBar(toolbar);
 		getSupportActionBar().setTitle("");
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		toolBar.setBackgroundColor(getResources()
+		toolbar.setBackgroundColor(getResources()
 				.getColor(R.color.PrimaryColor));
 
 		changeDisplayTypeButton.setOnClickListener(this);
@@ -128,6 +156,17 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				scrollToolbarBy(-dy);
 				super.onScrolled(recyclerView, dx, dy);
+				int pos = -1;
+				if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+					pos = gridLayoutManager.findLastVisibleItemPosition();
+				} else if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+					pos = linearLayoutManager.findLastVisibleItemPosition();
+				}
+				if (pos > recyclerView.getAdapter().getItemCount() - 5) {
+					if (isMoreAllowed && !isRequestRunning) {
+						loadData();
+					}
+				}
 			}
 
 			@Override
@@ -155,21 +194,82 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 			}
 		});
 
-		bookType = getIntent().getExtras().getInt("home_book_type");
-		Toast.makeText(this, bookType + " type", Toast.LENGTH_SHORT).show();
-
 		actionBarTitle = getIntent().getExtras().getString("actionbarname");
 		toolbarTitle.setText(actionBarTitle);
 
 		gridLayoutManager = new GridLayoutManager(this, 2);
+		gridLayoutManager.setSpanSizeLookup(new SpanSizeLookup() {
+
+			@Override
+			public int getSpanSize(int arg0) {
+				if (adapter.mData.get(arg0).getImage_url()
+						.equals(loadMoreString))
+					return 2;
+				else
+					return 1;
+			}
+		});
 		linearLayoutManager = new LinearLayoutManager(this,
 				LinearLayoutManager.VERTICAL, false);
 		recyclerView.setLayoutManager(gridLayoutManager);
 
-		addData();
+		bookType = getIntent().getExtras().getInt("home_book_type", -1);
+		if (bookType == -1) {
 
-		adapter = new ShopActivityListAdapter(mData, this);
-		recyclerView.setAdapter(adapter);
+		} else {
+			if (bookType == BNC_HOME_LIST_TYPE_FEATURED)
+				modeToSend = BNC_MODE_SHOP_FEATURED;
+			else if (bookType == BNC_HOME_LIST_TYPE_BEST_SELLING) {
+				modeToSend = BNC_MODE_SHOP_BEST_SELLING;
+			} else if (bookType == BNC_HOME_LIST_TYPE_NEW_ADDED) {
+				modeToSend = BNC_MODE_SHOP_LATEST;
+			} else if (bookType == BNC_HOME_LIST_TYPE_CURRENTLY_ACTIVE) {
+				modeToSend = BNC_MODE_SHOP_CURRENTLY_ACTIVE;
+			} else if (bookType == BNC_HOME_LIST_TYPE_TOP_RATED) {
+				modeToSend = BNC_MODE_SHOP_TOP_RATED;
+			}
+		}
+
+		if (getIntent().getExtras().containsKey("category_wise")) {
+			modeToSend = BNC_MODE_SHOP_CATEGORY_WISE;
+			categoryWise = true;
+			categoryId = getIntent().getExtras().getInt("category_wise");
+		} else if (getIntent().getExtras().containsKey("tag_wise")) {
+			modeToSend = BNC_MODE_SHOP_TAG_WISE;
+			tagWise = true;
+			tagId = getIntent().getExtras().getInt("tag_wise");
+		}
+
+		loadData();
+	}
+
+	@Override
+	protected void onDestroy() {
+		UploadManager.getInstance().removeCallback(this);
+		super.onDestroy();
+	}
+
+	@SuppressWarnings("deprecation")
+	private void loadData() {
+		if (modeToSend != -1) {
+			String url = ZApplication.getInstance().getBaseUrl()
+					+ "commonly_popular_books/";
+			List<NameValuePair> nameValuePairs = new ArrayList<>();
+			nameValuePairs.add(new BasicNameValuePair("mode", Integer
+					.toString(modeToSend)));
+			nameValuePairs.add(new BasicNameValuePair("pagenumber", Integer
+					.toString(nextPageNumber)));
+			if (categoryWise == true) {
+				nameValuePairs.add(new BasicNameValuePair("category_id",
+						Integer.toString(categoryId)));
+			} else if (tagWise == true) {
+				nameValuePairs.add(new BasicNameValuePair("tag_id", Integer
+						.toString(tagId)));
+			}
+			UploadManager.getInstance().makeAyncRequest(url,
+					BNC_SHOP_ACTIVTY_TAG, BNC_SHOP_ACTIVTY_TAG,
+					BNC_SHOP_ACTIVTY_TAG, null, nameValuePairs, null);
+		}
 	}
 
 	public void scrollToolbarBy(int dy) {
@@ -210,44 +310,14 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 		}
 	}
 
-	private void addData() {
-		mData = new ArrayList<>();
-		mData.add(new HomeTopRatedBookObject(
-				0,
-				"This is long name here and it makes sense int his thashosjbsb sjknkdn ajskan ajsjn akjnskn jansjdn kajnskn ajnsk",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(0, "This is long name here an",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(
-				0,
-				"This is long name here and it makes sense int his thashosjbsb sjknkdn ajskan ajsjn akjns",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(0,
-				"This is long name here and it makes sense int his thashosj",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(
-				0,
-				"This is long name here and it makes sense int his thashosjbsb sjknkdn ajskan ajsjn akjnskn jansjdn kajnskn ajnsk",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(
-				0,
-				"This is long name here and it makes sense int his thashosjbsb sjknkdn ajskan ajsjn akjns",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(
-				0,
-				"This is long name here and it makes sense int his thashosjbsb sjknkdn ajskan ajsjn akjnskn jansjdn kajnskn ajnsk",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(0,
-				"This is long name here and it makes sense int his thashosj",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(
-				0,
-				"This is long name here and it makes sense int his thashosjbsb sjknkdn ajskan ajsjn akjnskn jansjdn kajnskn ajnsk",
-				50, false, ""));
-		mData.add(new HomeTopRatedBookObject(
-				0,
-				"This is long name here and it makes sense int his thashosjbsb sjknkdn ajskan ajsjn akjnskn jansjdn kajnskn ajnsk",
-				50, false, ""));
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
+			this.finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@SuppressLint("NewApi")
@@ -256,24 +326,38 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 		switch (v.getId()) {
 		case R.id.changelistviewtype:
 			if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_GRID) {
-				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_LIST;
-				changeDisplayTypeButton
-						.setImageResource(R.drawable.list_long_icon);
-				adapter = new ShopActivityListAdapter(mData, this);
-				recyclerView.setAdapter(adapter);
-				recyclerView.setLayoutManager(linearLayoutManager);
+				try {
+					currentDisplayType = BNC_SHOP_DISPLAY_TYPE_LIST;
+					changeDisplayTypeButton
+							.setImageResource(R.drawable.list_long_icon);
+					adapter = new ShopActivityListAdapter(adapter.mData, this,
+							false);
+					recyclerView.setAdapter(adapter);
+					recyclerView.setLayoutManager(linearLayoutManager);
+				} catch (Exception ex) {
+				}
 			} else if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_LIST) {
-				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_LONG_LIST;
-				changeDisplayTypeButton.setImageResource(R.drawable.grid_icon);
-				adapter = new ShopActivityListAdapter(mData, this);
-				recyclerView.setAdapter(adapter);
-				recyclerView.setLayoutManager(linearLayoutManager);
+				try {
+					currentDisplayType = BNC_SHOP_DISPLAY_TYPE_LONG_LIST;
+					changeDisplayTypeButton
+							.setImageResource(R.drawable.grid_icon);
+					adapter = new ShopActivityListAdapter(adapter.mData, this,
+							false);
+					recyclerView.setAdapter(adapter);
+					recyclerView.setLayoutManager(linearLayoutManager);
+				} catch (Exception ex) {
+				}
 			} else if (currentDisplayType == BNC_SHOP_DISPLAY_TYPE_LONG_LIST) {
-				currentDisplayType = BNC_SHOP_DISPLAY_TYPE_GRID;
-				changeDisplayTypeButton.setImageResource(R.drawable.list_icon);
-				adapter = new ShopActivityListAdapter(mData, this);
-				recyclerView.setAdapter(adapter);
-				recyclerView.setLayoutManager(gridLayoutManager);
+				try {
+					currentDisplayType = BNC_SHOP_DISPLAY_TYPE_GRID;
+					changeDisplayTypeButton
+							.setImageResource(R.drawable.list_icon);
+					adapter = new ShopActivityListAdapter(adapter.mData, this,
+							false);
+					recyclerView.setAdapter(adapter);
+					recyclerView.setLayoutManager(gridLayoutManager);
+				} catch (Exception ex) {
+				}
 			}
 			break;
 		case R.id.sort_layput_shop:
@@ -290,6 +374,9 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 			break;
 		case R.id.applyfiltersbutton:
 			applyFiltersButtonClicked();
+			break;
+		case R.id.retrylayoutconnectionerror:
+			loadData();
 			break;
 
 		default:
@@ -441,5 +528,61 @@ public class ShopActivity extends AppCompatActivity implements AppConstants,
 			hidefiltersButtonLayout();
 		else
 			super.onBackPressed();
+	}
+
+	@Override
+	public void uploadFinished(int requestType, int objectId, Object data,
+			int uploadId, boolean status, int parserId) {
+		if (requestType == BNC_SHOP_ACTIVTY_TAG) {
+			isRequestRunning = false;
+			hideMainContentLoadingAnimations();
+			if (status) {
+				if (adapter == null) {
+					hideConnectionErrorLayout();
+					ShopActivityObject obj = (ShopActivityObject) data;
+					if (obj.getNext_page() == null) {
+						nextPageNumber = null;
+						isMoreAllowed = false;
+					} else {
+						nextPageNumber = obj.getNext_page();
+						isMoreAllowed = true;
+					}
+					adapter = new ShopActivityListAdapter(obj.getBooks(), this,
+							isMoreAllowed);
+					recyclerView.setAdapter(adapter);
+				} else {
+					ShopActivityObject obj = (ShopActivityObject) data;
+					if (obj.getNext_page() == null) {
+						nextPageNumber = null;
+						isMoreAllowed = false;
+					} else {
+						nextPageNumber = obj.getNext_page();
+						isMoreAllowed = true;
+					}
+					adapter.addData(obj.getBooks(), isMoreAllowed);
+				}
+			} else {
+				if (adapter == null) {
+					showConnectionErrorLayout();
+				} else {
+					Toast.makeText(
+							this,
+							"Unable to load more data. Check internet connection",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void uploadStarted(int requestType, int objectId, int parserId,
+			Object object) {
+		if (requestType == BNC_SHOP_ACTIVTY_TAG) {
+			isRequestRunning = true;
+			if (adapter == null) {
+				hideConnectionErrorLayout();
+				showMainContentLoadingAnimations();
+			}
+		}
 	}
 }

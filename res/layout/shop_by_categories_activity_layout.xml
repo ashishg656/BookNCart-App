@@ -2,81 +2,90 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/com.bookncart.app"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpagecategory"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </android.support.v4.view.ViewPager>
+    android:layout_height="match_parent" >
 
     <FrameLayout
-        android:id="@+id/frame_layout_header_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bnc_shop_by_categories_header_height" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <com.bookncart.app.notboringactionbar.KenBurnsSupportView
-            android:id="@+id/kenburnssupportview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
-
-        <com.bookncart.app.circularreveal.RevealFrameLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpagecategory"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
+        </android.support.v4.view.ViewPager>
 
-            <View
-                android:id="@+id/image_overlay_bg"
+        <FrameLayout
+            android:id="@+id/frame_layout_header_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bnc_shop_by_categories_header_height" >
+
+            <com.bookncart.app.notboringactionbar.KenBurnsSupportView
+                android:id="@+id/kenburnssupportview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bnc_shop_by_category_color1_light" />
+                android:scaleType="centerCrop" />
 
-            <View
-                android:id="@+id/circular_reveal_view"
+            <com.bookncart.app.circularreveal.RevealFrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.bookncart.app.circularreveal.RevealFrameLayout>
+                android:layout_height="match_parent" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bnc_shop_by_categories_header_height"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/bnc_margin_mini" >
+                <View
+                    android:id="@+id/image_overlay_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bnc_shop_by_category_color1_light" />
 
-            <View
+                <View
+                    android:id="@+id/circular_reveal_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.bookncart.app.circularreveal.RevealFrameLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@android:color/transparent" />
+                android:layout_height="@dimen/bnc_shop_by_categories_header_height"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/bnc_margin_mini" >
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@android:color/transparent" />
 
-                <ImageView
-                    android:id="@+id/header_imageview"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circular_bg_category_image_1"
-                    android:padding="@dimen/bnc_margin_large"
-                    android:src="@drawable/laptop" />
-            </FrameLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
 
-            <com.bookncart.app.widgets.PagerSlidingTabStrip
-                android:id="@+id/tab_strip_category"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/bnc_button_height"
-                android:layout_gravity="bottom"
-                app:pstsPaddingMiddle="true"
-                app:pstsIndicatorColor="@color/bnc_white"
-                app:pstsTextAllCaps="true"
-                app:pstsTextColorSelected="@color/bnc_white" >
-            </com.bookncart.app.widgets.PagerSlidingTabStrip>
-        </LinearLayout>
+                    <ImageView
+                        android:id="@+id/header_imageview"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circular_bg_category_image_1"
+                        android:padding="@dimen/bnc_margin_large"
+                        android:src="@drawable/laptop" />
+                </FrameLayout>
+
+                <com.bookncart.app.widgets.PagerSlidingTabStrip
+                    android:id="@+id/tab_strip_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/bnc_button_height"
+                    android:layout_gravity="bottom"
+                    app:pstsIndicatorColor="@color/bnc_white"
+                    app:pstsPaddingMiddle="true"
+                    app:pstsTextAllCaps="true"
+                    app:pstsTextColorSelected="@color/bnc_white" >
+                </com.bookncart.app.widgets.PagerSlidingTabStrip>
+            </LinearLayout>
+        </FrameLayout>
+
+        <include layout="@layout/toolbar_layout_without_drop_shadow_white_text" />
     </FrameLayout>
 
-    <include layout="@layout/toolbar_layout_without_drop_shadow_white_text" />
+    <include layout="@layout/connection_error_layout" />
+
+    <include layout="@layout/progress_layout" />
 
 </FrameLayout>
