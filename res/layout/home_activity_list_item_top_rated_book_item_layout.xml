@@ -23,8 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/bnc_home_top_rated_book_image_height"
                 android:layout_margin="@dimen/bnc_margin_mini"
-                android:scaleType="centerCrop"
-                android:src="@drawable/book4" />
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/top_rated_book_name"

@@ -25,7 +25,6 @@
                 android:layout_height="@dimen/bnc_home_recent_book_image_height"
                 android:layout_marginBottom="@dimen/bnc_margin_mini"
                 android:scaleType="centerCrop"
-                android:src="@drawable/book4"
                 app:riv_corner_radius_top_left="3dp"
                 app:riv_corner_radius_top_right="3dp" />
 

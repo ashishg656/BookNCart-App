@@ -1,7 +1,7 @@
 package com.bookncart.app.application;
 
-import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
+
 import java.io.File;
 
 import android.app.ActivityManager;
@@ -16,9 +16,15 @@ import com.bookncart.app.R;
 import com.bookncart.app.extras.AppConstants;
 import com.bookncart.app.preferences.ZPreferences;
 import com.bookncart.app.serverApi.UploadManager;
+import com.bookncart.app.utils.AnalyticsTrackers;
 import com.bookncart.app.utils.FontsOverride;
 import com.bookncart.app.utils.LruCache;
 import com.bookncart.app.utils.NutraBaseImageDecoder;
+import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.StandardExceptionParser;
+import com.google.android.gms.analytics.Tracker;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,6 +34,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 public class ZApplication extends Application implements AppConstants {
+
+	public static final String TAG = ZApplication.class.getSimpleName();
 
 	public static ZApplication sInstance;
 
@@ -54,6 +62,9 @@ public class ZApplication extends Application implements AppConstants {
 
 		cache = new LruCache<String, Bitmap>(30);
 		UploadManager.setContext(getApplicationContext());
+
+		AnalyticsTrackers.initialize(this);
+		AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 	}
 
 	private int getCurrentVersionNo() {
@@ -119,5 +130,40 @@ public class ZApplication extends Application implements AppConstants {
 			FontsOverride.setDefaultFont(getApplicationContext(), types[i],
 					"fonts/" + font);
 		}
+	}
+
+	public synchronized Tracker getGoogleAnalyticsTracker() {
+		AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
+		return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
+	}
+
+	public void trackScreenView(String screenName) {
+		Tracker t = getGoogleAnalyticsTracker();
+		// Set screen name.
+		t.setScreenName(screenName);
+		// Send a screen view.
+		t.send(new HitBuilders.ScreenViewBuilder().build());
+
+		GoogleAnalytics.getInstance(this).dispatchLocalHits();
+	}
+
+	public void trackException(Exception e) {
+		if (e != null) {
+			Tracker t = getGoogleAnalyticsTracker();
+
+			t.send(new HitBuilders.ExceptionBuilder()
+					.setDescription(
+							new StandardExceptionParser(this, null)
+									.getDescription(Thread.currentThread()
+											.getName(), e)).setFatal(false)
+					.build());
+		}
+	}
+
+	public void trackEvent(String category, String action, String label) {
+		Tracker t = getGoogleAnalyticsTracker();
+		// Build and send an Event.
+		t.send(new HitBuilders.EventBuilder().setCategory(category)
+				.setAction(action).setLabel(label).build());
 	}
 }

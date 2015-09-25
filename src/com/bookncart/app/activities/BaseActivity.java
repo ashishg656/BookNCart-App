@@ -114,6 +114,16 @@ public class BaseActivity extends AppCompatActivity implements AppConstants,
 		startActivity(intent);
 	}
 
+	void openRecentlyViewedBooksActivity() {
+		Intent intent = new Intent(this, RecentlyViewedBooksActivity.class);
+		startActivity(intent);
+	}
+
+	void openShopByCategoriesActivity() {
+		Intent intent = new Intent(this, ShopByCategoriesActivity.class);
+		startActivity(intent);
+	}
+
 	@SuppressWarnings("deprecation")
 	void addToFavouritesRequest(int bookId, boolean askForNumberOfLikesOnBook) {
 		if (ZPreferences.isUserLogIn(this)) {

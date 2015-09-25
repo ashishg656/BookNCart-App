@@ -1,6 +1,7 @@
 package com.bookncart.app.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -13,17 +14,20 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
 import com.bookncart.app.R;
 import com.bookncart.app.fragments.CartFragment;
 import com.bookncart.app.fragments.WishlistFragment;
+import com.bookncart.app.preferences.ZPreferences;
 import com.bookncart.app.widgets.PagerSlidingTabStrip;
 
 @SuppressLint("NewApi")
 public class WishlistAndCartActivity extends BaseActivity implements
-		OnPageChangeListener {
+		OnPageChangeListener, OnClickListener {
 
 	public ViewPager viewPager;
 	PagerSlidingTabStrip pagerSlidingTabStrip;
@@ -44,6 +48,8 @@ public class WishlistAndCartActivity extends BaseActivity implements
 		pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabstripcartwishlist);
 		floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_cart);
 		coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cordinatorwishlist);
+
+		floatingActionButton.setOnClickListener(this);
 
 		toolbar.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
@@ -190,6 +196,30 @@ public class WishlistAndCartActivity extends BaseActivity implements
 					.setInterpolator(new DecelerateInterpolator());
 		} else {
 			scrollToolbarAfterTouchEnds();
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.fab_cart:
+			openConfirmOrderActivity();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	public void openConfirmOrderActivity() {
+		if (ZPreferences.isUserLogIn(this)) {
+			Intent i = new Intent(this, ConfirmOrderActivity.class);
+			startActivity(i);
+		} else {
+			Intent i = new Intent(this, LaunchActivity.class);
+			startActivity(i);
+			Toast.makeText(this, "You need to login before placing an order.",
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 }

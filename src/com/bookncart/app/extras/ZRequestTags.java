@@ -29,6 +29,7 @@ public interface ZRequestTags {
 	public int BNC_EDIT_CART_ITEM_QUANTITY_TAG = 20;
 	public int BNC_CART_READD_CART_ITEM = 21;
 	public int BNC_BUYNOW_REQUEST_TAG = 22;
+	public int BNC_CONFIRM_ORDER_REQUEST_TAG = 23;
 
 	// string
 }

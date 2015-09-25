@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//src/com/bookncart/app/activities/BookDetailActivity.java=UTF-8
 encoding//src/com/bookncart/app/activities/ShopActivity.java=UTF-8
 encoding//src/com/bookncart/app/adapters/CartRecyclerAdapter.java=UTF-8
+encoding//src/com/bookncart/app/adapters/ConfirmOrderRecyclerAdapter.java=UTF-8
 encoding//src/com/bookncart/app/adapters/HomeActivityRecyclerViewAdapter.java=UTF-8
 encoding//src/com/bookncart/app/adapters/ProductDetailSimilarBooksRecyclerAdapter.java=UTF-8
 encoding//src/com/bookncart/app/adapters/RecentlyViewedBooksRecyclerAdapter.java=UTF-8

@@ -42,5 +42,7 @@
     </string-array>
 
     <string name="viewing_cached_data">Unable to fetch data from server. You are viewing cached data. Please check your internet connection and click here to RETRY!</string>
+    <string name="bnc_home_description">Shop from large collection of books for all categories, add them to your wishlist and share them with your friends.</string>
+    <string name="bnc_similar_description">View books SIMILAR to any book by long pressing on that book.</string>
 
 </resources>

@@ -50,6 +50,8 @@ public class CartFragment extends BaseFragment implements ZRequestTags,
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		retryDataConnectionLayout.setOnClickListener(this);
 
 		layoutManager = new LinearLayoutManager(getActivity(),
 				LinearLayoutManager.VERTICAL, false);

@@ -194,6 +194,7 @@
         android:background="@drawable/rounded_corner_linear_layout_stroke_bg" >
 
         <TextView
+            android:id="@+id/placeorderbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/z_user_profile_article_bg_selector"

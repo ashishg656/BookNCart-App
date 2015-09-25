@@ -3,22 +3,50 @@
 
     <group android:checkableBehavior="single" >
         <item
-            android:id="@+id/drawer_feeds"
+            android:id="@+id/bnc_home"
             android:checked="true"
             android:icon="@drawable/ic_launcher"
             android:title="@string/bnc_home"/>
         <item
-            android:id="@+id/drawer_experts"
+            android:id="@+id/bnc_shop_by_categories"
             android:icon="@drawable/ic_launcher"
             android:title="@string/bnc_shop_by_categories"/>
         <item
-            android:id="@+id/drawer_shop"
+            android:id="@+id/bnc_recently_viewed_books"
             android:icon="@drawable/ic_launcher"
             android:title="@string/bnc_recently_viewed_books"/>
+    </group>
+    <group android:checkableBehavior="single" >
         <item
-            android:id="@+id/drawer_profile"
+            android:id="@+id/bnc_notifications"
             android:icon="@drawable/ic_launcher"
-            android:title="@string/bnc_contact_us"/>
+            android:title="My Notifications">
+        </item>
+        <item
+            android:id="@+id/bnc_orders"
+            android:icon="@drawable/ic_launcher"
+            android:title="My Orders">
+        </item>
+        <item
+            android:id="@+id/bnc_contact_us"
+            android:icon="@drawable/ic_launcher"
+            android:title="Contact Us">
+        </item>
+        <item
+            android:id="@+id/bnc_rateus"
+            android:icon="@drawable/ic_launcher"
+            android:title="Rate Us">
+        </item>
+        <item
+            android:id="@+id/bnc_share"
+            android:icon="@drawable/ic_launcher"
+            android:title="Share">
+        </item>
+        <item
+            android:id="@+id/bnc_about"
+            android:icon="@drawable/ic_launcher"
+            android:title="About BookNCart">
+        </item>
     </group>
 
 </menu>

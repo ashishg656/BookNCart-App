@@ -3,6 +3,7 @@ package com.bookncart.app.fragments;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,13 +12,15 @@ import com.bookncart.app.R;
 import com.bookncart.app.activities.BookDetailActivity;
 import com.bookncart.app.baseobjects.BookDetailObject;
 
-public class BookDescriptionFragment extends BaseFragment {
+public class BookDescriptionFragment extends BaseFragment implements
+		OnClickListener {
 
 	LinearLayout toolbarLayout;
 	TextView authorName, publisherName, isbn, mrp, price, condition, binding,
 			edition, language, numberofPages, bookName, publicationYear,
 			description;
 	BookDetailObject mData;
+	LinearLayout backButton;
 
 	public static BookDescriptionFragment newInstance(Bundle bundle) {
 		BookDescriptionFragment frg = new BookDescriptionFragment();
@@ -33,6 +36,7 @@ public class BookDescriptionFragment extends BaseFragment {
 				false);
 
 		bookName = (TextView) v.findViewById(R.id.numberoferviews);
+		backButton = (LinearLayout) v.findViewById(R.id.backbuttonfake2);
 		toolbarLayout = (LinearLayout) v
 				.findViewById(R.id.toolbarfakereviewfrag);
 		authorName = (TextView) v.findViewById(R.id.author);
@@ -60,6 +64,8 @@ public class BookDescriptionFragment extends BaseFragment {
 		int color = ((BookDetailActivity) getActivity()).darkColor;
 		toolbarLayout.setBackgroundColor(color);
 
+		backButton.setOnClickListener(this);
+
 		description.setText(mData.getDescription());
 		bookName.setText(mData.getName());
 		authorName.setText(mData.getAuthor());
@@ -73,5 +79,17 @@ public class BookDescriptionFragment extends BaseFragment {
 		language.setText(mData.getLanguage());
 		numberofPages.setText(mData.getNumber_of_pages() + "");
 		publicationYear.setText(mData.getPublication_year());
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.backbuttonfake2:
+			((BookDetailActivity) getActivity()).onBackPressed();
+			break;
+
+		default:
+			break;
+		}
 	}
 }

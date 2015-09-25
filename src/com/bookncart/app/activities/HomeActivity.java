@@ -119,7 +119,7 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 		setContentView(R.layout.home_activity_layout);
 
 		UploadManager.getInstance().addCallback(this, this);
-		
+
 		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 		recyclerView = (RecyclerView) findViewById(R.id.home_recycler_view);
 		navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -274,8 +274,6 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 		});
 
 		loadFirstDataRequest();
-		
-		throw new RuntimeException("Sample crash");
 	}
 
 	private void loadFirstDataRequest() {
@@ -330,9 +328,13 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 						item.setChecked(true);
 						drawerLayout.closeDrawers();
 						switch (item.getItemId()) {
-						case R.id.drawer_feeds:
-							Toast.makeText(HomeActivity.this, "feeds select",
-									Toast.LENGTH_SHORT).show();
+						case R.id.bnc_home:
+							return true;
+						case R.id.bnc_recently_viewed_books:
+							openRecentlyViewedBooksActivity();
+							return true;
+						case R.id.bnc_shop_by_categories:
+							openShopByCategoriesActivity();
 							return true;
 
 						default:
@@ -487,6 +489,8 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 											R.color.bnc_yellow_color));
 					cachedDataSnackbar.show();
 					appBarLayout.setTranslationY(0);
+					performWishlistCountModification();
+					performCartCountModification();
 				} else {
 					showConnectionErrorLayout();
 				}
@@ -802,14 +806,22 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 				"scaleY", 1);
 		ObjectAnimator animTrans = ObjectAnimator.ofFloat(similarBooksLayout,
 				"translationY", deviceHeight);
-		ObjectAnimator animToolbar = ObjectAnimator.ofArgb(
-				toolbar.getBackground(), "alpha", 255);
+
+		animTrans.addUpdateListener(new AnimatorUpdateListener() {
+
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				float alphaFactor = (float) similarBooksLayout
+						.getTranslationY() / (float) deviceHeight;
+				int alpha = (int) (alphaFactor * 255);
+				toolbar.getBackground().setAlpha(Math.abs(alpha));
+			}
+		});
 
 		List<Animator> animSetList = new ArrayList<>();
 		animSetList.add(animTrans);
 		animSetList.add(recyclerAnimator1);
 		animSetList.add(recyclerAnimator2);
-		animSetList.add(animToolbar);
 
 		AnimatorSet animSet = new AnimatorSet();
 		animSet.setDuration(duration);
@@ -819,6 +831,7 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 			@Override
 			public void onAnimationEnd(Animator animation) {
 				similarBooksContainerLayout.setVisibility(View.GONE);
+				toolbar.getBackground().setAlpha(255);
 			}
 		});
 		animSet.playTogether(animSetList);
@@ -834,6 +847,7 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 		similarBooksContainerLayout.setVisibility(View.VISIBLE);
 		similarBooksBackgroundView.setImageAlpha(0);
 		recyclerView.setPivotY(0);
+		recyclerView.setPivotX(deviceWidth / 2);
 
 		similarBooksRecyclerView.setAdapter(null);
 

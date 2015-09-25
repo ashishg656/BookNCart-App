@@ -13,8 +13,7 @@
     <ImageView
         android:id="@+id/imgae_selct_semester"
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/semester1" />
+        android:layout_height="100dp" />
 
     <TextView
         android:id="@+id/name_selct_semester"

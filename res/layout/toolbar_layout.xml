@@ -40,7 +40,8 @@
             android:gravity="center"
             android:text="999"
             android:textColor="@color/bnc_white"
-            android:textSize="@dimen/bnc_font_mini" />
+            android:textSize="@dimen/bnc_font_mini"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/cartcounttxt"
@@ -52,7 +53,8 @@
             android:gravity="center"
             android:text="999"
             android:textColor="@color/bnc_white"
-            android:textSize="@dimen/bnc_font_mini" />
+            android:textSize="@dimen/bnc_font_mini"
+            android:visibility="gone" />
     </FrameLayout>
 
 </android.support.design.widget.AppBarLayout>

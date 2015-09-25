@@ -48,6 +48,10 @@ public class RecentlyViewedBooksActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recently_viewed_books_activity);
 
+		setConnectionErrorVariables();
+
+		retryDataConnectionLayout.setOnClickListener(this);
+
 		recyclerView = (RecyclerView) findViewById(R.id.recent_recycler_view);
 		progressDarkCircle = (View) findViewById(R.id.dark_circle);
 		progressLightCircle = (View) findViewById(R.id.light_circle);
@@ -145,6 +149,7 @@ public class RecentlyViewedBooksActivity extends BaseActivity implements
 			isRequestRunning = false;
 			hideMainContentLoadingAnimations();
 			if (status) {
+				hideConnectionErrorLayout();
 				if (adapter == null) {
 					ShopActivityObject obj = (ShopActivityObject) data;
 					if (obj.getNext_page() == null) {
@@ -174,7 +179,9 @@ public class RecentlyViewedBooksActivity extends BaseActivity implements
 					adapter.addData(obj.getBooks(), isMoreAllowed);
 				}
 			} else {
-				Log.w("as", "req failed");
+				if (adapter == null) {
+					showConnectionErrorLayout();
+				}
 			}
 		}
 	}
@@ -205,6 +212,13 @@ public class RecentlyViewedBooksActivity extends BaseActivity implements
 
 	@Override
 	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.retrylayoutconnectionerror:
+			loadData();
+			break;
 
+		default:
+			break;
+		}
 	}
 }

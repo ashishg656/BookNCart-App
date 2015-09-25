@@ -55,6 +55,7 @@ import com.bookncart.app.serverApi.UploadManagerCallback;
 import com.bookncart.app.utils.CommonLib;
 import com.bookncart.app.utils.JSONUtils;
 import com.bookncart.app.widgets.CirclePageIndicator;
+import com.bookncart.app.widgets.ParallaxViewPagerTransformer;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -173,6 +174,9 @@ public class LaunchActivity extends BaseActivity implements
 		} catch (Exception e) {
 		}
 
+		viewPager.setPageTransformer(true, new ParallaxViewPagerTransformer(
+				R.id.imagelaunch));
+
 		loginButtonsLayout.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
 
@@ -233,6 +237,12 @@ public class LaunchActivity extends BaseActivity implements
 					@Override
 					public void onSuccess(LoginResult result) {
 						Log.w("facebook", "success " + result);
+						if (!ZPreferences.isGcmRegistered(LaunchActivity.this)) {
+							Intent intent = new Intent(LaunchActivity.this,
+									RegistrationIntentService.class);
+							startService(intent);
+						}
+
 						if (progressDialog != null)
 							progressDialog.dismiss();
 						if (AccessToken.getCurrentAccessToken()
@@ -521,6 +531,7 @@ public class LaunchActivity extends BaseActivity implements
 		case R.id.launch_skip_text:
 			Intent i = new Intent(this, HomeActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_CLEAR_TASK
 					| Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
 			break;
@@ -620,6 +631,12 @@ public class LaunchActivity extends BaseActivity implements
 
 		// Show the signed-in UI
 		// showSignedInUI();
+
+		if (!ZPreferences.isGcmRegistered(LaunchActivity.this)) {
+			Intent intent = new Intent(LaunchActivity.this,
+					RegistrationIntentService.class);
+			startService(intent);
+		}
 
 		if (progressDialog != null) {
 			progressDialog.dismiss();
@@ -751,6 +768,7 @@ public class LaunchActivity extends BaseActivity implements
 
 					Intent intent = new Intent(this, HomeActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+							| Intent.FLAG_ACTIVITY_CLEAR_TASK
 							| Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(intent);
 					this.finish();

@@ -83,6 +83,10 @@ public class UserProfileActivity extends BaseActivity implements
 		mHeaderHeight = getResources().getDisplayMetrics().heightPixels / 2;
 		mMinHeaderTranslation = -mHeaderHeight + getActionBarHeight();
 
+		setConnectionErrorVariables();
+
+		retryDataConnectionLayout.setOnClickListener(this);
+
 		mListView = (ListView) findViewById(R.id.listview);
 		toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
 		toolbar = (LinearLayout) findViewById(R.id.toolbar);
@@ -266,10 +270,11 @@ public class UserProfileActivity extends BaseActivity implements
 		if (requestType == BNC_USER_PROFILE_REQUEST_TAG) {
 			hideMainContentLoadingAnimations();
 			if (status) {
+				hideConnectionErrorLayout();
 				mData = (UserProfileObject) data;
 				fillDataForUserProfile();
 			} else {
-
+				showConnectionErrorLayout();
 			}
 		} else if (requestType == BNC_LOGOUT_REQUEST_TAG) {
 			if (progressDialog != null)
@@ -309,18 +314,19 @@ public class UserProfileActivity extends BaseActivity implements
 
 	private void logOutUserFromApp() {
 		ZPreferences.setIsUserLogin(this, false);
+		ZPreferences.setIsGcmRegistered(this, false);
 		ZPreferences.setWishlistCount(this, 0);
 		if (mGoogleApiClient.isConnected()) {
 			Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
 			mGoogleApiClient.disconnect();
 			mGoogleApiClient.connect();
-		} else {
-			Intent i = new Intent(this, LaunchActivity.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(i);
-			this.finish();
 		}
+		Intent i = new Intent(this, LaunchActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_CLEAR_TASK
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(i);
+		UserProfileActivity.this.finish();
 	}
 
 	private void fillDataForUserProfile() {
@@ -356,7 +362,9 @@ public class UserProfileActivity extends BaseActivity implements
 		case R.id.backbuttonprofile:
 			finish();
 			break;
-
+		case R.id.retrylayoutconnectionerror:
+			loadData();
+			break;
 		default:
 			break;
 		}
@@ -378,9 +386,10 @@ public class UserProfileActivity extends BaseActivity implements
 		if (!ZPreferences.isUserLogIn(this)) {
 			Intent i = new Intent(this, LaunchActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_CLEAR_TASK
 					| Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
-			this.finish();
+			UserProfileActivity.this.finish();
 		}
 	}
 }

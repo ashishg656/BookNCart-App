@@ -22,8 +22,7 @@
         <com.bookncart.app.notboringactionbar.KenBurnsSupportView
             android:id="@+id/header_picture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/book3" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,6 +48,8 @@
     </FrameLayout>
 
     <include layout="@layout/user_profile_toolbar_layout" />
+
+    <include layout="@layout/connection_error_layout" />
 
     <include layout="@layout/progress_layout" />
 

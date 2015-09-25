@@ -88,6 +88,7 @@ public class CartRecyclerAdapter extends
 			holder.cartTotal.setText("₹ " + mData.getCart_total());
 			holder.deliveryCharge.setText("₹ " + mData.getDelivery_charge());
 			holder.totalAmount.setText("₹ " + mData.getTotal_amount());
+			holder.confirmOrderButton.setOnClickListener(myClickListener);
 		} else if (getItemViewType(pos) == BNC_CART_LIST_TYPE_CART_ITEM) {
 			CartlistItemHolder holder = (CartlistItemHolder) commonHolder;
 			CartObjectSingleBook obj = mData.getBooks().get(pos - 1);
@@ -179,10 +180,13 @@ public class CartRecyclerAdapter extends
 	class CartFooterViewHolder extends RecyclerView.ViewHolder {
 
 		LinearLayout addMoreFromWishlist;
+		TextView confirmOrderButton;
 		TextView totalQuantity, cartTotal, deliveryCharge, totalAmount;
 
 		public CartFooterViewHolder(View v) {
 			super(v);
+			confirmOrderButton = (TextView) v
+					.findViewById(R.id.placeorderbutton);
 			addMoreFromWishlist = (LinearLayout) v
 					.findViewById(R.id.addmorefromwishlist);
 			totalQuantity = (TextView) v.findViewById(R.id.totalquantity);
@@ -224,7 +228,8 @@ public class CartRecyclerAdapter extends
 			case R.id.removecart:
 				removeItemHolder = (CartlistItemHolder) v.getTag();
 				removeItemPosition = removeItemHolder.getAdapterPosition();
-				removeItemCartObject = mData.getBooks().get(removeItemPosition - 1);
+				removeItemCartObject = mData.getBooks().get(
+						removeItemPosition - 1);
 
 				sendRemoveCartItemRequest();
 				break;
@@ -233,6 +238,9 @@ public class CartRecyclerAdapter extends
 				Intent intent = new Intent(context, BookDetailActivity.class);
 				intent.putExtra("bookid", bookid);
 				context.startActivity(intent);
+				break;
+			case R.id.placeorderbutton:
+				((WishlistAndCartActivity) context).openConfirmOrderActivity();
 				break;
 
 			default:

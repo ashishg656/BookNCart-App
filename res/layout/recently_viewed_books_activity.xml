@@ -17,6 +17,8 @@
 
     <include layout="@layout/toolbar_layout" />
 
+    <include layout="@layout/connection_error_layout" />
+
     <include layout="@layout/progress_layout" />
 
 </FrameLayout>

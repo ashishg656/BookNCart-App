@@ -115,6 +115,7 @@ public class ReviewsFragment extends BaseFragment implements OnClickListener,
 		bookId = getArguments().getInt("bookid");
 
 		retryDataConnectionLayout.setOnClickListener(this);
+		backButton.setOnClickListener(this);
 
 		touchListener = new MyTouchListener();
 		minimumRecyclerViewHeight = getActivity().getResources()
@@ -377,6 +378,8 @@ public class ReviewsFragment extends BaseFragment implements OnClickListener,
 		case R.id.retrylayoutconnectionerror:
 			loadData();
 			break;
+		case R.id.backbuttonfake2:
+			((BookDetailActivity) getActivity()).onBackPressed();
 
 		default:
 			break;

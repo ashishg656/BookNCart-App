@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <string name="ga_trackingId">UA-65892231-2</string>
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <screenName name="com.bookncart.app.activities.BookDetailActivity">Book Detail Activity</screenName>
+    <screenName name="com.bookncart.app.activities.HomeActivity">Home Activity</screenName>
+    <screenName name="com.bookncart.app.activities.LaunchActivity">Launch Activity</screenName>
+    <screenName name="com.bookncart.app.activities.RecentlyViewedBooksActivity">Recently Viewed Books Activity</screenName>
+    <screenName name="com.bookncart.app.activities.SearchActivity">Search Activity</screenName>
+    <screenName name="com.bookncart.app.activities.ShopActivity">Shop Activity</screenName>
+    <screenName name="com.bookncart.app.activities.ShopByCategoriesActivity">Shop By Categories Activity</screenName>
+    <screenName name="com.bookncart.app.activities.SplashActivity">Splash Activity</screenName>
+    <screenName name="com.bookncart.app.activities.UserProfileActivity">User Profile Activity</screenName>
+    <screenName name="com.bookncart.app.activities.WishlistAndCartActivity">Wishlist And Cart Activity</screenName>
+
+</resources>
