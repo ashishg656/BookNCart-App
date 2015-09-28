@@ -28,7 +28,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -294,7 +293,6 @@ public class HomeActivity extends BaseActivity implements OnDragListener,
 
 	@Override
 	protected void onDestroy() {
-		Log.w("onDestroy", "callback removed");
 		UploadManager.getInstance().removeCallback(this);
 		super.onDestroy();
 	}

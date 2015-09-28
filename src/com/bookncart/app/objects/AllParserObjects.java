@@ -1,10 +1,10 @@
 package com.bookncart.app.objects;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.bookncart.app.baseobjects.AddToCartObject;
 import com.bookncart.app.baseobjects.AddToFavouritesObject;
+import com.bookncart.app.baseobjects.AddressObject;
 import com.bookncart.app.baseobjects.BookDetailObject;
 import com.bookncart.app.baseobjects.CartObject;
 import com.bookncart.app.baseobjects.HomeActivityRequest1Object;
@@ -93,8 +93,12 @@ public class AllParserObjects {
 	public CartObject parseViewCartObject(String s) {
 		return new Gson().fromJson(s, CartObject.class);
 	}
-	
-	public AddToCartObject parseAddToCartObject(String s){
+
+	public AddToCartObject parseAddToCartObject(String s) {
 		return new Gson().fromJson(s, AddToCartObject.class);
+	}
+
+	public AddressObject parseAllAddressesObject(String s) {
+		return new Gson().fromJson(s, AddressObject.class);
 	}
 }

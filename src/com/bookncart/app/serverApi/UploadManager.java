@@ -17,11 +17,11 @@ import org.apache.http.message.BasicNameValuePair;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.bookncart.app.application.ZApplication;
 import com.bookncart.app.baseobjects.ErrorObject;
 import com.bookncart.app.preferences.ZPreferences;
+import com.bookncart.app.utils.CommonLib;
 
 public class UploadManager {
 
@@ -91,7 +91,6 @@ public class UploadManager {
 		}
 		nameValuePairs.add(new BasicNameValuePair("device_id", ZPreferences
 				.getDeviceID(mContext)));
-		Log.w("device id", ZPreferences.getDeviceID(mContext));
 
 		new PostAsyncTask(url, requestType, objectId, parserId, object,
 				nameValuePairs, entities).execute();
@@ -159,7 +158,7 @@ public class UploadManager {
 
 					String text = builder.toString();
 
-					Log.w("data received", text);
+					CommonLib.ZLog("data received", text);
 
 					return ParserClass.parseData(text, this.parserId, mContext);
 				} else {
@@ -174,7 +173,7 @@ public class UploadManager {
 					}
 					String text = builder.toString();
 
-					Log.w("error", "error happened " + text);
+					CommonLib.ZLog("error", text);
 
 					ErrorObject obj = new ErrorObject(text, response
 							.getStatusLine().getStatusCode());

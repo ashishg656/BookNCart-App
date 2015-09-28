@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,7 +84,6 @@ public class CartFragment extends BaseFragment implements ZRequestTags,
 
 	@Override
 	public void onStart() {
-		Log.w("as", "on start callback cart fragment");
 		UploadManager.getInstance().addCallback(this, getActivity());
 		loadData();
 		super.onStart();
@@ -93,7 +91,6 @@ public class CartFragment extends BaseFragment implements ZRequestTags,
 
 	@Override
 	public void onStop() {
-		Log.w("As", "cart fragment callback removed");
 		UploadManager.getInstance().removeCallback(this);
 		super.onDestroy();
 	}

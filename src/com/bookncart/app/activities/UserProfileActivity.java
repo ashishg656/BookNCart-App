@@ -6,7 +6,6 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -382,7 +381,6 @@ public class UserProfileActivity extends BaseActivity implements
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
-		Log.w("as", "describe con " + result.describeContents() + result);
 		if (!ZPreferences.isUserLogIn(this)) {
 			Intent i = new Intent(this, LaunchActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP

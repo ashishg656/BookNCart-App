@@ -17,7 +17,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -343,7 +342,6 @@ public class ShopByCategoriesActivity extends BaseActivity implements
 			animator.addListener(new SupportAnimator.AnimatorListener() {
 				@Override
 				public void onAnimationStart() {
-					Log.w("reveal", "animation start");
 					circularRevealView.setBackgroundColor(circularrevealcolor);
 				}
 
@@ -353,14 +351,12 @@ public class ShopByCategoriesActivity extends BaseActivity implements
 
 				@Override
 				public void onAnimationEnd() {
-					Log.w("reveal", "animation end");
 					circularRevealView.setBackgroundColor(getResources()
 							.getColor(android.R.color.transparent));
 				}
 
 				@Override
 				public void onAnimationCancel() {
-					Log.w("reveal", "animation cancel");
 				}
 			});
 			animator.start();

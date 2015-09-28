@@ -190,7 +190,7 @@ public class CommonLib {
 
 		return dist;
 	}
-
+	
 	/**
 	 * {@see {@link Log#println(int, String, String)}
 	 * 

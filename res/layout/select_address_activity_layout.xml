@@ -8,6 +8,35 @@
         android:id="@+id/addresscontent"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/confrmorder_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="50dp"
+            android:paddingTop="50dp"
+            android:scrollbars="none" />
+
+        <FrameLayout
+            android:id="@+id/newaddress"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:background="@color/PrimaryColor"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:includeFontPadding="false"
+                android:text="Add Address"
+                android:textAllCaps="true"
+                android:textColor="@color/bnc_white" />
+        </FrameLayout>
     </FrameLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -15,5 +44,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </android.support.design.widget.CoordinatorLayout>
+
+    <include layout="@layout/toolbar_layout" />
+
+    <include layout="@layout/connection_error_layout" />
+
+    <include layout="@layout/progress_layout" />
 
 </FrameLayout>

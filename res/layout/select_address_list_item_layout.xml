@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bnc_white"
+    android:clickable="true"
+    android:foreground="@drawable/z_user_profile_article_bg_selector" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/bnc_margin_large"
+        android:paddingRight="@dimen/bnc_margin_large"
+        android:paddingTop="@dimen/bnc_margin_large" >
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textColor="@color/bnc_text_color_dark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/address1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Address line 1, address line 2"
+            android:textColor="@color/bnc_text_color_light" />
+
+        <TextView
+            android:id="@+id/address2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="city , state - pincode"
+            android:textColor="@color/bnc_text_color_light" />
+
+        <TextView
+            android:id="@+id/mobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bnc_margin_small"
+            android:layout_marginTop="2dp"
+            android:text="9873443137"
+            android:textColor="@color/bnc_text_color_dark" />
+
+        <View
+            android:id="@+id/dividerview"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/bnc_grey_shade_3" />
+    </LinearLayout>
+
+</FrameLayout>

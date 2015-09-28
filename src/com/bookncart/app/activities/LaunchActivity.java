@@ -28,7 +28,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -236,7 +235,6 @@ public class LaunchActivity extends BaseActivity implements
 
 					@Override
 					public void onSuccess(LoginResult result) {
-						Log.w("facebook", "success " + result);
 						if (!ZPreferences.isGcmRegistered(LaunchActivity.this)) {
 							Intent intent = new Intent(LaunchActivity.this,
 									RegistrationIntentService.class);
@@ -257,7 +255,6 @@ public class LaunchActivity extends BaseActivity implements
 
 					@Override
 					public void onError(FacebookException error) {
-						Log.w("facebook", "error");
 						if (progressDialog != null)
 							progressDialog.dismiss();
 						Toast.makeText(LaunchActivity.this, error.getMessage(),
@@ -266,7 +263,6 @@ public class LaunchActivity extends BaseActivity implements
 
 					@Override
 					public void onCancel() {
-						Log.w("facebook", "cancel");
 						if (progressDialog != null)
 							progressDialog.dismiss();
 					}
@@ -592,9 +588,6 @@ public class LaunchActivity extends BaseActivity implements
 
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
-		Log.d("google login",
-				"onConnectionFailed:" + connectionResult.describeContents()
-						+ connectionResult);
 		if (!mIsResolving && mShouldResolve) {
 			if (connectionResult.hasResolution()) {
 				try {
@@ -626,7 +619,6 @@ public class LaunchActivity extends BaseActivity implements
 
 	@Override
 	public void onConnected(Bundle bundle) {
-		Log.d("google login", "onConnected:" + bundle);
 		mShouldResolve = false;
 
 		// Show the signed-in UI
@@ -660,8 +652,6 @@ public class LaunchActivity extends BaseActivity implements
 			personPhoto = personPhoto.substring(0, personPhoto.length() - 2)
 					+ PROFILE_PIC_SIZE;
 
-			Log.w("as", personName + personPhoto + currentPerson
-					+ personGooglePlusProfile + " - " + email);
 
 			nameToSend = personName;
 			imageUrlToSend = personPhoto;
@@ -671,7 +661,6 @@ public class LaunchActivity extends BaseActivity implements
 					+ "  ---   profile url   --   " + personGooglePlusProfile;
 			isGoogleAccountToSend = true;
 		} else {
-			Log.w("as", "null");
 		}
 
 		GetGoogleIdTokenTask task = new GetGoogleIdTokenTask();
@@ -720,25 +709,20 @@ public class LaunchActivity extends BaseActivity implements
 				return GoogleAuthUtil.getToken(getApplicationContext(),
 						account, scopes);
 			} catch (IOException e) {
-				Log.e("google", "Error retrieving ID token.", e);
 				return null;
 			} catch (GoogleAuthException e) {
-				Log.e("google", "Error retrieving ID token.", e);
 				return null;
 			}
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
-			Log.i("google", "ID token: " + result);
 			if (progressDialog != null)
 				progressDialog.dismiss();
 			if (result != null) {
-				Log.w("as", "Successfully retrieved ID Token " + result);
 				accessTokenToSend = result;
 				makeLoginRequestToServer();
 			} else {
-				Log.w("As", "There was some error getting the ID Token");
 			}
 		}
 	}
@@ -777,7 +761,6 @@ public class LaunchActivity extends BaseActivity implements
 							Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				Log.w("as", "fail");
 			}
 		}
 	}
@@ -786,7 +769,6 @@ public class LaunchActivity extends BaseActivity implements
 	public void uploadStarted(int requestType, int objectId, int parserId,
 			Object object) {
 		if (requestType == BNC_LOGIN_REQUEST_TAG) {
-			Log.w("as", "start");
 			progressDialog.dismiss();
 			progressDialog = ProgressDialog.show(this, "Welcome",
 					"Just a moment, logging in");

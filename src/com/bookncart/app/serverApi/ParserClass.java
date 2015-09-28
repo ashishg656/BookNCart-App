@@ -67,6 +67,8 @@ public class ParserClass implements ZRequestTags {
 			return AllParserObjects.getinstance().parseAddToCartObject(text);
 		} else if (objType == BNC_CONFIRM_ORDER_REQUEST_TAG) {
 			return AllParserObjects.getinstance().parseViewCartObject(text);
+		} else if (objType == BNC_VIEW_ALL_ADDRESSES_REQUEST_TAG) {
+			return AllParserObjects.getinstance().parseAllAddressesObject(text);
 		}
 		return null;
 	}

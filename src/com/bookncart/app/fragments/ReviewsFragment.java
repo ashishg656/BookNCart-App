@@ -15,7 +15,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;

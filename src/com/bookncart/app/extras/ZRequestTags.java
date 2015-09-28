@@ -30,6 +30,8 @@ public interface ZRequestTags {
 	public int BNC_CART_READD_CART_ITEM = 21;
 	public int BNC_BUYNOW_REQUEST_TAG = 22;
 	public int BNC_CONFIRM_ORDER_REQUEST_TAG = 23;
+	public int BNC_VIEW_ALL_ADDRESSES_REQUEST_TAG = 24;
+	public int BNC_EDIT_ADDRESS_REQUEST_TAG = 25;
 
 	// string
 }

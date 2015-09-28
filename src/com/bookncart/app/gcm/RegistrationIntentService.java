@@ -21,7 +21,6 @@ import java.io.IOException;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.bookncart.app.preferences.ZPreferences;
 import com.bookncart.app.utils.CommonLib;
@@ -50,8 +49,6 @@ public class RegistrationIntentService extends IntentService {
 			String token = instanceID.getToken(CommonLib.GCM_SENDER_ID,
 					GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
-			Log.i(TAG, "GCM Registration Token: " + token);
-
 			// TODO: Implement this method to send any registration to your
 			// app's servers.
 			sendRegistrationToServer(token);
@@ -61,7 +58,6 @@ public class RegistrationIntentService extends IntentService {
 
 			ZPreferences.setIsGcmRegistered(this, true);
 		} catch (Exception e) {
-			Log.d(TAG, "Failed to complete token refresh", e);
 			ZPreferences.setIsGcmRegistered(this, false);
 		}
 		Intent registrationComplete = new Intent(CommonLib.GCM_TAG);

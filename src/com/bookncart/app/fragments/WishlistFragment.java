@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnItemTouchListener;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -86,7 +85,6 @@ public class WishlistFragment extends BaseFragment implements
 
 	@Override
 	public void onStart() {
-		Log.w("as", "on start callback wishlist fragment");
 		UploadManager.getInstance().addCallback(this, getActivity());
 		loadData();
 		super.onStart();
@@ -94,7 +92,6 @@ public class WishlistFragment extends BaseFragment implements
 
 	@Override
 	public void onStop() {
-		Log.w("As", "wishlist fragment callback removed");
 		UploadManager.getInstance().removeCallback(this);
 		super.onDestroy();
 	}

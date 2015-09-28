@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -760,15 +759,12 @@ public class HomeActivityRecyclerViewAdapter extends
 			int action = event.getAction();
 			switch (action) {
 			case DragEvent.ACTION_DRAG_STARTED:
-				Log.w("as", "drag start");
 				((HomeActivity) context).setButtonsLocation(v, event);
 				return true;
 			case DragEvent.ACTION_DRAG_ENDED:
 				((HomeActivity) context).hideButtonsLayout();
-				Log.w("as", "drag end");
 				return true;
 			default:
-				Log.w("as", "drag some " + action);
 				break;
 			}
 			return false;
