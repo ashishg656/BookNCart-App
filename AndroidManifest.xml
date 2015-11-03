@@ -111,11 +111,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
         </activity>
         <activity
-            android:name="com.bookncart.app.activities.SimpleLoginActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
-        </activity>
-        <activity
             android:name="com.bookncart.app.activities.HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/NoActionBarThemeTransparentStatusBar" >
